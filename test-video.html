@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Player</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <h1>Video Player</h1>
+    <div class="video-container">
+        <video id="videoPlayer" controls width="640" height="360">
+            <source id="videoSource" src="https://www.hollymoviehd.cc/inception-2010/*.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="link-input">
+        <label for="videoLink">Enter Video URL:</label>
+        <input type="text" id="videoLink" placeholder="Enter video link here..." />
+        <button id="loadVideo">Load Video</button>
+    </div>
+
+    <script>
+        document.getElementById('loadVideo').addEventListener('click', function() {
+            const videoLink = document.getElementById('videoLink').value;
+            const videoSource = document.getElementById('videoSource');
+            videoSource.src = videoLink;
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.load(); // Load the new video source
+        });
+    </script>
+</body>
+</html>

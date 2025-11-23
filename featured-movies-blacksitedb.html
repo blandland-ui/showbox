@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Featured Movies — BlackSiteDB</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body{background:#0f0f0f;color:#ddd;font-family:system-ui,Segoe UI,Roboto,Arial;margin:0}
+    header{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .logo{font-weight:700;color:#fff}
+    main{max-width:1100px;margin:18px auto;padding:16px}
+    .breadcrumb{color:#bbb;font-size:0.95rem;margin-bottom:12px;text-align:left}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+    .card{background:linear-gradient(#1b1b1b,#141414);border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;display:flex;gap:8px;align-items:flex-start;text-decoration:none;color:inherit}
+    .card img{width:84px;height:120px;object-fit:cover;border-radius:6px}
+    .card .meta{flex:1}
+    .card .title{font-weight:700;color:#fff;margin-bottom:6px}
+    .pager{display:flex;justify-content:center;margin-top:14px;gap:6px}
+    .pager button{background:transparent;border:none;color:#ddd;padding:6px 8px;cursor:pointer}
+    .pager button.active{background:#00bcd4;color:#060606;border-radius:6px}
+    .filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+    .filters select,.filters input{background:#111;border:1px solid rgba(255,255,255,0.04);color:#ddd;padding:6px;border-radius:6px}
+    @media (max-width:640px){ .card img{width:72px;height:100px} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">BlackSiteDB.org</div>
+    <nav class="main-nav" aria-label="Main Navigation" style="margin-top: 12px;">
+      <ul style="list-style: none; padding: 0; display: flex; gap: 16px;">
+        <li><a href="index.html" style="color:#ccc;text-decoration:none">Home</a></li>
+        <li><a href="pages/where-to-watch.html" style="color:#ccc;text-decoration:none">Where To Watch</a></li>
+        <li><a href="featured-movies-blacksitedb.html" style="color:#ccc;text-decoration:none">Movies</a></li>
+        <li><a href="pages/tv.html" style="color:#ccc;text-decoration:none">TV</a></li>
+        <li><a href="pages/cartoons.html" style="color:#ccc;text-decoration:none">Cartoons/Anime</a></li>
+        <li><a href="pages/about.html" style="color:#ccc;text-decoration:none">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main aria-live="polite">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="blacksite-db.html" style="color:#ccc;text-decoration:none">Home</a> <span style="color:#666">›</span>
+      <span style="color:#fff">Featured Movies</span>
+    </nav>
+
+    <div class="filters" aria-hidden="false">
+      <input id="q" placeholder="Search titles..." />
+      <select id="genre"><option value="">Any genre</option><option>Action</option><option>Comedy</option><option>Drama</option></select>
+      <select id="sort"><option value="popular">Most popular</option><option value="newest">Newest</option></select>
+      <button id="apply" style="background:#111;color:#ddd;border-radius:6px;padding:6px 10px;border:1px solid rgba(255,255,255,0.03);">Apply</button>
+    </div>
+
+    <section id="list" class="grid" role="list"></section>
+
+    <div id="pager" class="pager" aria-label="Pagination"></div>
+  </main>
+<!-- html -->
+<script src="config.js"></script>
+<script>
+const API_KEY = window.TMDB_API_KEY || '';
+
+function mapMovie(r){
+  return {
+    id: r.id,
+    title: r.title || r.name || 'Untitled',
+    poster: r.poster_path ? `https://image.tmdb.org/t/p/w300${r.poster_path}` : 'https://via.placeholder.com/240x320.png?text=No+Poster',
+    year: r.release_date ? r.release_date.split('-')[0] : ''
+  };
+}
+
+async function fetchPage(p, q = '', sort = 'popular'){
+  if (!API_KEY) {
+    const items = Array.from({length:12},(_,i)=>({id:3000+i,title:`Sample Movie ${i+1}`,poster:'https://via.placeholder.com/300x450?text=Movie',year:2000+(i%20),genre:'Sample'}));
+    return { items, totalPages: 1 };
+  }
+  try {
+    let url;
+    if (q) {
+      url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&page=${p}`;
+    } else {
+      const cat = sort === 'newest' ? 'now_playing' : 'popular';
+      url = `https://api.themoviedb.org/3/movie/${cat}?api_key=${API_KEY}&page=${p}`;
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Network');
+    const json = await res.json();
+    return { items: (json.results||[]).map(mapMovie), totalPages: json.total_pages||1 };
+  } catch (e) {
+    const items = Array.from({length:12},(_,i)=>({id:3000+i,title:`Sample Movie ${i+1}`,poster:'https://via.placeholder.com/300x450?text=Movie',year:2000+(i%20),genre:'Sample'}));
+    return { items, totalPages: 1 };
+  }
+}
+
+/* Global handler: navigates to player.html with TMDb ID for embed streaming */
+window.handleTmdbLinkClick = async function(tmdbId, type = 'movie', opts = { open: true, targetPage: 'player.html' }) {
+  if (!tmdbId) return;
+  
+  // Build URL with TMDb ID and type
+  const url = `${opts.targetPage}?tmdb=${encodeURIComponent(tmdbId)}&type=${encodeURIComponent(type)}`;
+  
+  if (opts.open) {
+    location.href = url;
+  }
+  
+  return url;
+};
+
+function render(items){
+  const el = document.getElementById('list');
+  if (!el) return;
+  el.innerHTML = '';
+  (items||[]).forEach(it => {
+    const a = document.createElement('a');
+    a.className = 'card';
+    a.href = `item-detail-blacksitedb.html?id=${it.id}`;
+    a.setAttribute('role','listitem');
+    a.dataset.tmdbId = it.id;
+    a.innerHTML = `<img src="${it.poster}" alt="${it.title} poster" />
+      <div class="meta">
+        <div class="title">${it.title}</div>
+        <div style="color:#aaa;font-size:0.9rem">${it.year||''} ${it.genre? '• ' + it.genre : ''}</div>
+      </div>`;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.handleTmdbLinkClick(it.id, 'movie');
+    });
+    el.appendChild(a);
+  });
+}
+
+function renderPager(containerEl, current, total, onPage) {
+  if (!containerEl) return;
+  containerEl.innerHTML = '';
+
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'pager-nav-btn';
+  prevBtn.innerHTML = '&#x25C0;';
+  prevBtn.disabled = current <= 1;
+  prevBtn.onclick = () => onPage(Math.max(1, current - 1));
+  containerEl.appendChild(prevBtn);
+
+  function btn(p){ const b=document.createElement('button'); b.textContent=p; if(p===current) b.className='active'; b.onclick=()=>onPage(p); return b; }
+  if(total<=9){ for(let i=1;i<=total;i++) containerEl.appendChild(btn(i)); }
+  else {
+    containerEl.appendChild(btn(1));
+    if(current>3) containerEl.appendChild(Object.assign(document.createElement('span'),{textContent:'…',style:'color:#777;padding:6px'}));
+    const start=Math.max(2,current-2), end=Math.min(total-1,current+2);
+    for(let i=start;i<=end;i++) containerEl.appendChild(btn(i));
+    if(current < total-2) containerEl.appendChild(Object.assign(document.createElement('span'),{textContent:'…',style:'color:#777;padding:6px'}));
+    containerEl.appendChild(btn(total));
+  }
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'pager-nav-btn';
+  nextBtn.innerHTML = '&#x25B6;';
+  nextBtn.disabled = current >= total;
+  nextBtn.onclick = () => onPage(Math.min(total, current + 1));
+  containerEl.appendChild(nextBtn);
+}
+
+(function init(){
+  const qEl = document.getElementById('q');
+  const genreEl = document.getElementById('genre');
+  const sortEl = document.getElementById('sort');
+  const pagerEl = document.getElementById('pager');
+  let page = 1;
+
+  async function load(p){
+    const data = await fetchPage(p, qEl.value.trim(), sortEl.value);
+    render(data.items);
+    renderPager(pagerEl, p, data.totalPages, np => { page = np; load(np); window.scrollTo({top:0,behavior:'smooth'}); });
+    history.replaceState(null,'',`?page=${p}`);
+  }
+
+  document.getElementById('apply').addEventListener('click', ()=>{ page=1; load(page); });
+  // load from query or default
+  const params = new URLSearchParams(location.search);
+  const qp = parseInt(params.get('page') || '1', 10);
+  page = isNaN(qp) ? 1 : qp;
+  load(page);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Provider — BlackSiteDB</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body{background:#0f0f0f;color:#ddd;font-family:system-ui,Segoe UI,Roboto,Arial;margin:0}
+    header{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .logo{font-weight:700;color:#fff}
+    main{max-width:900px;margin:24px auto;padding:16px}
+    .hero{display:flex;gap:16px;align-items:center}
+    .hero img{width:120px;height:60px;object-fit:contain;border-radius:6px;background:#0b0b0b}
+    .muted{color:#aaa}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">BlackSiteDB.org</div>
+    <nav style="margin-top:12px">
+      <a href="blacksite-db.html" style="color:#ccc;text-decoration:none;margin-right:12px">Home</a>
+      <a href="where-to-watch.html" style="color:#ccc;text-decoration:none">Where To Watch</a>
+    </nav>
+  </header>
+
+  <main id="provider-main" aria-live="polite">
+    <div id="loader" class="muted">Loading provider…</div>
+
+    <article id="provider-article" style="display:none">
+      <div class="hero">
+        <img id="provider-logo" src="" alt="logo">
+        <div>
+          <h1 id="provider-name"></h1>
+          <div id="provider-tags" class="muted"></div>
+        </div>
+      </div>
+
+      <section id="provider-desc" style="margin-top:16px;color:#ddd">
+        <h3 style="margin-top:0;color:#fff">About</h3>
+        <p id="provider-about" class="muted">No description available.</p>
+      </section>
+
+      <section id="provider-links" style="margin-top:16px">
+        <h3 style="color:#fff">Related / Links</h3>
+        <div id="related-list" class="muted">—</div>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || '';
+    function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+    // Try API then fallback to simple lookup: expecting /api/providers or static list
+    (async function load(){
+      let list = [];
+      try {
+        const res = await fetch('/api/providers');
+        if (res.ok) {
+          const json = await res.json();
+          list = json.providers || [];
+        }
+      } catch(e){ /* ignore */ }
+
+      // fallback: minimal sample if API missing
+      if (!list.length) list = [{ name:'Netflix', id:'netflix', tags:'Subscription • Global', logo:'https://via.placeholder.com/240x120?text=Netflix', url:'#' }];
+
+      // find provider by id (support names and ids)
+      const provider = list.find(p => (p.id && p.id===id) || (slugify(p.name) === id)) || list[0];
+
+      document.getElementById('loader').style.display = 'none';
+      const art = document.getElementById('provider-article');
+      art.style.display = 'block';
+      document.getElementById('provider-name').textContent = provider.name || 'Unknown';
+      document.getElementById('provider-tags').textContent = provider.tags || '';
+      document.getElementById('provider-about').textContent = provider.about || 'No description available.';
+      document.getElementById('provider-logo').src = provider.logo || `https://via.placeholder.com/240x120?text=${encodeURIComponent(provider.name||'Provider')}`;
+      document.getElementById('related-list').innerHTML = (provider.related||[]).map(r=>`<div><a href="${r.url||'#'}" style="color:#cfe">${escapeHtml(r.name||r.title||'link')}</a></div>`).join('') || '<div class="muted">None</div>';
+    })();
+
+    function slugify(s){ return String(s||'').toLowerCase().replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-'); }
+  </script>
+</body>
+</html>

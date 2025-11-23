@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Watch movies and TV shows on FossBOX Mobile Player">
+  <title>Player - FossBOX Mobile</title>
+  
+  <link rel="stylesheet" href="assets/css/mobile.css">
+  <script src="assets/js/mobile-config.js"></script>
+  
+  <style>
+    /* Mobile Player Specific Styles */
+    .mobile-player-container {
+      background: #000;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .mobile-player-header {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .mobile-back-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #A3FC13;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .mobile-back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .mobile-player-title {
+      color: #A3FC13;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0;
+      text-align: center;
+      flex: 1;
+      padding: 0 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .mobile-player-menu {
+      background: none;
+      border: none;
+      color: #A3FC13;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 5px;
+    }
+    
+    .mobile-video-container {
+      flex: 1;
+      position: relative;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+    
+    .mobile-video-player {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+    }
+    
+    .mobile-loading {
+      color: #A3FC13;
+      font-size: 1rem;
+      text-align: center;
+    }
+    
+    .mobile-controls-section {
+      background: rgba(0, 0, 0, 0.95);
+      padding: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .mobile-server-selection {
+      margin-bottom: 10px;
+    }
+    
+    .mobile-server-label {
+      color: #A3FC13;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+    
+    .mobile-server-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .mobile-server-btn {
+      background: rgba(163, 252, 19, 0.1);
+      border: 1px solid rgba(163, 252, 19, 0.3);
+      color: #A3FC13;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 1;
+      min-width: 80px;
+      text-align: center;
+    }
+    
+    .mobile-server-btn:hover,
+    .mobile-server-btn.active {
+      background: rgba(163, 252, 19, 0.2);
+      border-color: #A3FC13;
+    }
+    
+    .mobile-quality-selection {
+      margin-bottom: 10px;
+    }
+    
+    .mobile-quality-buttons {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    
+    .mobile-quality-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ddd;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 1;
+      min-width: 50px;
+      text-align: center;
+    }
+    
+    .mobile-quality-btn:hover,
+    .mobile-quality-btn.active {
+      background: rgba(0, 188, 212, 0.2);
+      border-color: #00bcd4;
+      color: #00bcd4;
+    }
+    
+    .mobile-player-info {
+      background: rgba(27, 27, 27, 0.95);
+      padding: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .mobile-movie-details {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .mobile-movie-poster {
+      width: 80px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .mobile-movie-meta {
+      flex: 1;
+    }
+    
+    .mobile-movie-title {
+      color: #A3FC13;
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+      line-height: 1.2;
+    }
+    
+    .mobile-movie-year {
+      color: #aaa;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+    
+    .mobile-movie-rating {
+      background: rgba(163, 252, 19, 0.1);
+      color: #A3FC13;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    
+    .mobile-movie-overview {
+      color: #ccc;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+    
+    /* Landscape orientation optimizations */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .mobile-player-header {
+        padding: 5px 10px;
+      }
+      
+      .mobile-player-title {
+        font-size: 0.8rem;
+      }
+      
+      .mobile-controls-section {
+        padding: 10px;
+      }
+      
+      .mobile-player-info {
+        display: none; /* Hide info in landscape to save space */
+      }
+    }
+    
+    /* Hide navigation and other elements in fullscreen mode */
+    .mobile-nav,
+    .mobile-nav-overlay,
+    .mobile-search {
+      display: none;
+    }
+  </style>
+</head>
+<body class="mobile-player-container">
+  <!-- Mobile Player Header -->
+  <header class="mobile-player-header">
+    <button class="mobile-back-btn" onclick="history.back()" aria-label="Go back">
+      ‹ Back
+    </button>
+    <h1 class="mobile-player-title" id="movieTitle">Loading...</h1>
+    <button class="mobile-player-menu" onclick="togglePlayerMenu()" aria-label="Player menu">
+      ⋮
+    </button>
+  </header>
+
+  <!-- Video Container -->
+  <div class="mobile-video-container" id="videoContainer">
+    <div class="mobile-loading" id="loadingMessage">
+      Loading player...
+    </div>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="mobile-controls-section" id="controlsSection">
+    <!-- Server Selection -->
+    <div class="mobile-server-selection">
+      <label class="mobile-server-label">Choose Server:</label>
+      <div class="mobile-server-buttons" id="serverButtons">
+        <button class="mobile-server-btn active" data-server="vidsrc" data-url="https://vidsrc.to/embed">
+          VidSrc
+        </button>
+        <button class="mobile-server-btn" data-server="embedsu" data-url="https://embed.su/embed">
+          EmbedSu
+        </button>
+        <button class="mobile-server-btn" data-server="multiembed" data-url="https://multiembed.mov">
+          MultiEmbed
+        </button>
+        <button class="mobile-server-btn" data-server="autoembed" data-url="https://player.autoembed.cc/embed">
+          AutoEmbed
+        </button>
+        <button class="mobile-server-btn" data-server="vidlink" data-url="https://vidlink.pro">
+          VidLink
+        </button>
+      </div>
+    </div>
+
+    <!-- Quality Selection -->
+    <div class="mobile-quality-selection">
+      <label class="mobile-server-label">Quality:</label>
+      <div class="mobile-quality-buttons" id="qualityButtons">
+        <button class="mobile-quality-btn" data-quality="360p">360p</button>
+        <button class="mobile-quality-btn active" data-quality="720p">720p</button>
+        <button class="mobile-quality-btn" data-quality="1080p">1080p</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Movie Information -->
+  <div class="mobile-player-info" id="playerInfo">
+    <div class="mobile-movie-details" id="movieDetails">
+      <!-- Will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    class MobilePlayer {
+      constructor() {
+        this.currentServer = 'vidsrc';
+        this.movieId = null;
+        this.movieType = 'movie';
+        this.movieTitle = '';
+        this.init();
+      }
+
+      init() {
+        this.parseUrlParameters();
+        this.setupEventListeners();
+        this.loadMovieDetails();
+        this.loadPlayer();
+      }
+
+      parseUrlParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        this.movieId = urlParams.get('id');
+        this.movieType = urlParams.get('type') || 'movie';
+        this.movieTitle = decodeURIComponent(urlParams.get('title') || 'Movie');
+        
+        document.getElementById('movieTitle').textContent = this.movieTitle;
+      }
+
+      setupEventListeners() {
+        // Server selection
+        document.querySelectorAll('.mobile-server-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.mobile-server-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentServer = btn.dataset.server;
+            this.loadPlayer();
+          });
+        });
+
+        // Quality selection
+        document.querySelectorAll('.mobile-quality-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.mobile-quality-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // Quality change would trigger player reload if supported
+          });
+        });
+
+        // Handle orientation changes
+        window.addEventListener('orientationchange', () => {
+          setTimeout(() => this.adjustPlayerSize(), 100);
+        });
+      }
+
+      async loadMovieDetails() {
+        if (!this.movieId) return;
+
+        try {
+          const API_KEY = window.FossBOXMobileConfig.api.tmdb.key;
+          const response = await fetch(
+            `https://api.themoviedb.org/3/${this.movieType}/${this.movieId}?api_key=${API_KEY}`
+          );
+          const movie = await response.json();
+          
+          this.renderMovieDetails(movie);
+        } catch (error) {
+          console.error('Error loading movie details:', error);
+        }
+      }
+
+      renderMovieDetails(movie) {
+        const posterUrl = movie.poster_path 
+          ? `https://image.tmdb.org/t/p/w185${movie.poster_path}`
+          : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="120" fill="%23333"><rect width="100%" height="100%"/><text x="50%" y="50%" fill="%23666" text-anchor="middle" dy=".3em">No Image</text></svg>';
+        
+        const year = movie.release_date || movie.first_air_date 
+          ? new Date(movie.release_date || movie.first_air_date).getFullYear() 
+          : 'N/A';
+        
+        const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+        const title = movie.title || movie.name || this.movieTitle;
+
+        document.getElementById('movieDetails').innerHTML = `
+          <img src="${posterUrl}" alt="${title}" class="mobile-movie-poster">
+          <div class="mobile-movie-meta">
+            <h2 class="mobile-movie-title">${title}</h2>
+            <div class="mobile-movie-year">${year} • ${this.movieType === 'movie' ? 'Movie' : 'TV Show'}</div>
+            <div class="mobile-movie-rating">★ ${rating}</div>
+            <p class="mobile-movie-overview">${movie.overview || 'No description available.'}</p>
+          </div>
+        `;
+      }
+
+      loadPlayer() {
+        if (!this.movieId) {
+          document.getElementById('loadingMessage').textContent = 'No movie ID provided';
+          return;
+        }
+
+        const videoContainer = document.getElementById('videoContainer');
+        const serverBtn = document.querySelector(`[data-server="${this.currentServer}"]`);
+        const serverUrl = serverBtn ? serverBtn.dataset.url : 'https://vidsrc.to/embed';
+        
+        // Construct embed URL based on server and content type
+        let embedUrl;
+        
+        if (this.currentServer === 'autoembed') {
+          // AutoEmbed uses special format
+          if (this.movieType === 'tv') {
+            // For TV: https://player.autoembed.cc/embed/tv/{tmdb_id}/{season}/{episode}?server=2
+            // Default to season 1, episode 1 for now (can be enhanced later)
+            embedUrl = `${serverUrl}/tv/${this.movieId}/1/1?server=2`;
+          } else {
+            // For movies: https://player.autoembed.cc/embed/movie/{imdb_id}?server=2
+            // Note: AutoEmbed prefers IMDB IDs for movies (format: tt1234567)
+            // If movieId is numeric (TMDB), prefix with 'tt' as fallback
+            const movieIdFormatted = /^\d+$/.test(this.movieId) ? `tt${this.movieId}` : this.movieId;
+            embedUrl = `${serverUrl}/movie/${movieIdFormatted}?server=2`;
+          }
+        } else if (this.currentServer === 'vidlink') {
+          // VidLink uses TMDB IDs
+          if (this.movieType === 'tv') {
+            // For TV: https://vidlink.pro/tv/{tmdbId}/{season}/{episode}
+            // Default to season 1, episode 1 for now
+            embedUrl = `${serverUrl}/tv/${this.movieId}/1/1`;
+          } else {
+            // For movies: https://vidlink.pro/movie/{tmdbId}
+            embedUrl = `${serverUrl}/movie/${this.movieId}`;
+          }
+        } else if (this.currentServer === 'vidsrc') {
+          embedUrl = `${serverUrl}/${this.movieType}/${this.movieId}`;
+        } else if (this.currentServer === 'embedsu') {
+          embedUrl = `${serverUrl}/${this.movieType}/${this.movieId}`;
+        } else {
+          embedUrl = `${serverUrl}/${this.movieType}/${this.movieId}`;
+        }
+
+        videoContainer.innerHTML = `
+          <iframe 
+            id="videoPlayer"
+            class="mobile-video-player" 
+            src="${embedUrl}"
+            allowfullscreen
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
+        `;
+      }
+
+      adjustPlayerSize() {
+        const player = document.getElementById('videoPlayer');
+        if (player) {
+          // Adjust player dimensions for orientation
+          const isLandscape = window.innerWidth > window.innerHeight;
+          if (isLandscape) {
+            player.style.height = '100%';
+          }
+        }
+      }
+    }
+
+    // Global functions
+    function togglePlayerMenu() {
+      const controls = document.getElementById('controlsSection');
+      const info = document.getElementById('playerInfo');
+      
+      if (controls.style.display === 'none') {
+        controls.style.display = 'block';
+        info.style.display = 'block';
+      } else {
+        controls.style.display = 'none';
+        info.style.display = 'none';
+      }
+    }
+
+    // Initialize mobile player
+    document.addEventListener('DOMContentLoaded', () => {
+      new MobilePlayer();
+    });
+
+    // Prevent zoom on double tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+  </script>
+</body>
+</html>

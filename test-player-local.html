@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Player - FossBOX</title>
+    <style>
+        body { 
+            background: #0f0f0f; 
+            color: #ddd; 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        .test-links {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        h1 { 
+            color: #00bcd4; 
+            text-align: center; 
+            margin-bottom: 30px;
+        }
+        .link-group {
+            margin-bottom: 25px;
+        }
+        .link-group h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        a {
+            display: inline-block;
+            background: #00bcd4;
+            color: #000;
+            text-decoration: none;
+            padding: 12px 20px;
+            margin: 5px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        a:hover {
+            background: #00acc1;
+            transform: translateY(-1px);
+        }
+        .description {
+            background: #222;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 3px solid #00bcd4;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-links">
+        <h1>🎬 FossBOX Player Test Links</h1>
+        
+        <div class="description">
+            <strong>Test the updated player functionality:</strong>
+            <ul>
+                <li>✅ Season switching should now work properly</li>
+                <li>✅ Content names should display instead of TMDb IDs</li>
+                <li>✅ Episodes should load with proper names and descriptions</li>
+                <li>✅ Console logs will show detailed debugging information</li>
+            </ul>
+        </div>
+
+        <div class="link-group">
+            <h3>🔥 Popular TV Shows</h3>
+            <a href="player.html?tmdb=1396&type=tv&season=1&episode=1">Breaking Bad (S1E1)</a>
+            <a href="player.html?tmdb=1396&type=tv&season=2&episode=5">Breaking Bad (S2E5)</a>
+            <a href="player.html?tmdb=1396&type=tv&season=3&episode=10">Breaking Bad (S3E10)</a>
+        </div>
+
+        <div class="link-group">
+            <h3>👑 Game of Thrones</h3>
+            <a href="player.html?tmdb=1399&type=tv&season=1&episode=1">Game of Thrones (S1E1)</a>
+            <a href="player.html?tmdb=1399&type=tv&season=2&episode=1">Game of Thrones (S2E1)</a>
+            <a href="player.html?tmdb=1399&type=tv&season=8&episode=6">Game of Thrones (S8E6)</a>
+        </div>
+
+        <div class="link-group">
+            <h3>🌟 Netflix Originals</h3>
+            <a href="player.html?tmdb=80057&type=tv&season=1&episode=1">Stranger Things (S1E1)</a>
+            <a href="player.html?tmdb=80057&type=tv&season=4&episode=9">Stranger Things (S4E9)</a>
+            <a href="player.html?tmdb=70523&type=tv&season=1&episode=1">Bojack Horseman (S1E1)</a>
+        </div>
+
+        <div class="link-group">
+            <h3>🎬 Movies (for comparison)</h3>
+            <a href="player.html?tmdb=550&type=movie">Fight Club</a>
+            <a href="player.html?tmdb=157336&type=movie">Interstellar</a>
+            <a href="player.html?tmdb=27205&type=movie">Inception</a>
+        </div>
+
+        <div class="description">
+            <strong>Testing Instructions:</strong>
+            <ol>
+                <li>Click any TV show link above</li>
+                <li>Check if the season dropdown is populated with multiple seasons</li>
+                <li>Try switching between seasons - episodes should update</li>
+                <li>Check if content shows actual names instead of "TV Show ID: XXXX"</li>
+                <li>Check browser console (F12) for detailed logging</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

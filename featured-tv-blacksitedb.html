@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Featured TV — BlackSiteDB</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body{background:#0f0f0f;color:#ddd;font-family:system-ui,Segoe UI,Roboto,Arial;margin:0}
+    header{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .logo{font-weight:700;color:#fff}
+    main{max-width:1100px;margin:18px auto;padding:16px}
+    .filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+    .filters select,.filters input{background:#111;border:1px solid rgba(255,255,255,0.04);color:#ddd;padding:8px;border-radius:6px;min-width:140px}
+    .filters button{background:#111;color:#ddd;border-radius:6px;padding:8px 12px;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+    .card{background:linear-gradient(#1b1b1b,#141414);border:1px solid rgba(255,255,255,0.03);padding:10px;border-radius:8px;text-decoration:none;color:inherit;display:block}
+    .card img{width:100%;height:240px;object-fit:cover;border-radius:6px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.02)}
+    .card .title{font-weight:700;color:#fff;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pager{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:12px;flex-wrap:wrap}
+    .pager button{background:#111;border:1px solid rgba(255,255,255,0.05);color:#ddd;padding:6px 10px;border-radius:6px;cursor:pointer}
+    .pager button.active{background:#1f1f1f;color:#fff;border-color:rgba(255,255,255,0.15)}
+    .pager-nav-btn{background:none;border:none;color:#fff;font-size:1.1rem;width:2em;height:2em;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s}
+    .pager-nav-btn:disabled{color:#555;cursor:not-allowed}
+    .pager-nav-btn:hover:not(:disabled){background:#222;border-radius:50%}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">BlackSiteDB.org</div>
+    <nav class="main-nav" aria-label="Main Navigation" style="margin-top: 12px;">
+      <ul style="list-style: none; padding: 0; display: flex; gap: 16px;">
+        <li><a href="index.html" style="color:#ccc;text-decoration:none">Home</a></li>
+        <li><a href="pages/where-to-watch.html" style="color:#ccc;text-decoration:none">Where To Watch</a></li>
+        <li><a href="featured-movies-blacksitedb.html" style="color:#ccc;text-decoration:none">Movies</a></li>
+        <li><a href="featured-tv-blacksitedb.html" style="color:#ccc;text-decoration:none">TV</a></li>
+        <li><a href="pages/cartoons.html" style="color:#ccc;text-decoration:none">Cartoons/Anime</a></li>
+        <li><a href="pages/about.html" style="color:#ccc;text-decoration:none">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main aria-live="polite">
+    <h1 style="margin:8px 0 12px;color:#fff">Featured TV</h1>
+
+    <div class="filters" role="region" aria-label="Filters">
+      <input id="q" placeholder="Search TV..." />
+      <select id="sort">
+        <option value="popular">Popular</option>
+        <option value="top_rated">Top Rated</option>
+        <option value="on_the_air">On The Air</option>
+      </select>
+      <button id="apply">Apply</button>
+    </div>
+
+    <section id="list" class="grid" role="list" aria-label="TV list"></section>
+    <div id="pager" class="pager" aria-label="Pagination"></div>
+  </main>
+
+  <script src="config.js"></script>
+  <script>
+  const API_KEY = window.TMDB_API_KEY || '';
+
+  function mapTv(r){
+    return {
+      id: r.id,
+      title: r.name,
+      poster: r.poster_path ? `https://image.tmdb.org/t/p/w300${r.poster_path}` : 'https://via.placeholder.com/240x320.png?text=No+Poster',
+      year: r.first_air_date ? r.first_air_date.split('-')[0] : ''
+    };
+  }
+
+  async function fetchPage(p, q='', sort='popular'){
+    if (!API_KEY) {
+      // simple fallback
+      const items = Array.from({length:12},(_,i)=>({id:2000+i,title:`Sample TV ${i+1}`,poster:'https://via.placeholder.com/240x320?text=TV',year:2000+(i%20)}));
+      return { items, totalPages: 1 };
+    }
+    try{
+      let url;
+      if (q) {
+        url = `https://api.themoviedb.org/3/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(q)}&page=${p}`;
+      } else {
+        const cat = ['popular','top_rated','on_the_air'].includes(sort)?sort:'popular';
+        url = `https://api.themoviedb.org/3/tv/${cat}?api_key=${API_KEY}&page=${p}`;
+      }
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('Network');
+      const json = await res.json();
+      return { items: (json.results||[]).map(mapTv), totalPages: json.total_pages||1 };
+    }catch(e){
+      const items = Array.from({length:12},(_,i)=>({id:2000+i,title:`Sample TV ${i+1}`,poster:'https://via.placeholder.com/240x320?text=TV',year:2000+(i%20)}));
+      return { items, totalPages: 1 };
+    }
+  }
+
+  /* Global handler: navigates to player.html with TMDb ID for TV embed streaming */
+  window.handleTmdbLinkClick = async function(tmdbId, type = 'tv', opts = { open: true, targetPage: 'player.html' }) {
+    if (!tmdbId) return;
+    
+    // Build URL with TMDb ID and type
+    const url = `${opts.targetPage}?tmdb=${encodeURIComponent(tmdbId)}&type=${encodeURIComponent(type)}`;
+    
+    if (opts.open) {
+      location.href = url;
+    }
+    
+    return url;
+  };
+
+  function render(items){
+    const el = document.getElementById('list');
+    el.innerHTML = '';
+    (items||[]).forEach(it=>{
+      const a = document.createElement('a');
+      a.className='card';
+      a.href = `item-detail-blacksitedb.html?id=${it.id}&media=tv`;
+      a.dataset.tmdbId = it.id;
+      a.innerHTML = `<img src="${it.poster}" alt="${it.title} poster" />
+        <div class="meta">
+          <div class="title">${it.title}</div>
+          <div style="color:#aaa;font-size:0.9rem">${it.year||''}</div>
+        </div>`;
+      
+      // Add click handler to go to player instead
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.handleTmdbLinkClick(it.id, 'tv');
+      });
+      
+      el.appendChild(a);
+    });
+  }
+
+  function renderPager(containerEl, current, total, onPage) {
+    if (!containerEl) return;
+    containerEl.innerHTML = '';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'pager-nav-btn';
+    prevBtn.innerHTML = '&#x25C0;';
+    prevBtn.disabled = current <= 1;
+    prevBtn.onclick = () => onPage(current - 1);
+    containerEl.appendChild(prevBtn);
+
+    function btn(p){ const b=document.createElement('button'); b.textContent=p; if(p===current) b.className='active'; b.onclick=()=>onPage(p); return b; }
+    if(total<=9){ for(let i=1;i<=total;i++) containerEl.appendChild(btn(i)); }
+    else {
+      containerEl.appendChild(btn(1));
+      if(current>3) containerEl.appendChild(Object.assign(document.createElement('span'),{textContent:'…',style:'color:#777;padding:6px'}));
+      const start=Math.max(2,current-2), end=Math.min(total-1,current+2);
+      for(let i=start;i<=end;i++) containerEl.appendChild(btn(i));
+      if(current < total-2) containerEl.appendChild(Object.assign(document.createElement('span'),{textContent:'…',style:'color:#777;padding:6px'}));
+      containerEl.appendChild(btn(total));
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'pager-nav-btn';
+    nextBtn.innerHTML = '&#x25B6;';
+    nextBtn.disabled = current >= total;
+    nextBtn.onclick = () => onPage(current + 1);
+    containerEl.appendChild(nextBtn);
+  }
+
+  (function init(){
+    const qEl = document.getElementById('q');
+    const sortEl = document.getElementById('sort');
+    const pagerEl = document.getElementById('pager');
+    let page = 1;
+
+    async function load(p){
+      const data = await fetchPage(p, qEl.value.trim(), sortEl.value);
+      render(data.items);
+      renderPager(pagerEl, p, data.totalPages, np => { page = np; load(np); window.scrollTo({top:0,behavior:'smooth'}); });
+      history.replaceState(null,'',`?page=${p}`);
+    }
+    document.getElementById('apply').addEventListener('click', ()=>{ page=1; load(page); });
+    load(page);
+  })();
+  </script>
+</body>
+</html>

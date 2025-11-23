@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="FossBOX Mobile - Discover movies and TV shows optimized for mobile">
+  <title>FossBOX Mobile - Movies & TV</title>
+  
+  <link rel="stylesheet" href="assets/css/mobile.css">
+  <script src="assets/js/mobile-config.js"></script>
+  
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#A3FC13">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <a href="index.html" class="mobile-logo">
+      <img src="../assets/site-logo.png" alt="FossBOX Logo">
+      FossBOX
+    </a>
+    <button class="mobile-menu-toggle" aria-label="Open menu">
+      <img src="../assets/hamburger-icon.svg" alt="Menu" style="width: 20px; height: 20px; filter: brightness(0) invert(1);">
+    </button>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-header">
+      <a href="index.html" class="mobile-logo">FossBOX</a>
+      <button class="mobile-nav-close" aria-label="Close menu">✕</button>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="movies.html">Movies</a>
+      <a href="tv.html">TV Shows</a>
+      <a href="cartoons.html">Cartoons/Anime</a>
+      <a href="../index.html">Desktop Site</a>
+    </div>
+  </nav>
+  
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay"></div>
+
+  <!-- Mobile Search -->
+  <div class="mobile-search">
+    <form class="mobile-search-form">
+      <input type="text" placeholder="Search movies & TV shows..." autocomplete="off">
+      <button type="submit">🔍</button>
+    </form>
+  </div>
+
+  <!-- Section Toggle -->
+  <div class="mobile-section-toggle">
+    <button class="mobile-toggle-btn active" data-section="movies">Movies</button>
+    <button class="mobile-toggle-btn" data-section="tv">TV Shows</button>
+  </div>
+
+  <!-- Main Content -->
+  <main class="mobile-content">
+    <!-- Movies Section -->
+    <section class="mobile-section movies-section">
+      <div class="mobile-section-header">
+        <h2 class="mobile-section-title">Popular Movies</h2>
+        <a href="movies.html" class="mobile-view-all">View All</a>
+      </div>
+      <div class="mobile-movie-grid" id="mobile-movies-grid">
+        <div class="loading">Loading movies...</div>
+      </div>
+    </section>
+
+    <!-- TV Shows Section -->
+    <section class="mobile-section tv-section hidden">
+      <div class="mobile-section-header">
+        <h2 class="mobile-section-title">Popular TV Shows</h2>
+        <a href="tv.html" class="mobile-view-all">View All</a>
+      </div>
+      <div class="mobile-movie-grid" id="mobile-tv-grid">
+        <div class="loading">Loading TV shows...</div>
+      </div>
+    </section>
+
+    <!-- Quick Access -->
+    <section class="mobile-section">
+      <div class="mobile-section-header">
+        <h2 class="mobile-section-title">Quick Access</h2>
+      </div>
+      <div class="mobile-filters">
+        <button class="mobile-filter-btn active" onclick="window.location.href='movies.html?filter=popular'">Popular Movies</button>
+        <button class="mobile-filter-btn" onclick="window.location.href='movies.html?filter=trending'">Trending</button>
+        <button class="mobile-filter-btn" onclick="window.location.href='tv.html?filter=airing'">Airing Now</button>
+        <button class="mobile-filter-btn" onclick="window.location.href='cartoons.html'">Anime</button>
+        <button class="mobile-filter-btn" onclick="window.location.href='movies.html?filter=upcoming'">Upcoming</button>
+      </div>
+    </section>
+
+    <!-- Mobile Pagination -->
+    <div class="mobile-pagination" id="mobilePagination">
+      <div class="mobile-pagination-container">
+        <button class="mobile-page-btn mobile-page-prev" id="prevPageBtn" disabled>‹ Prev</button>
+        <div class="mobile-page-numbers" id="pageNumbers">
+          <button class="mobile-page-btn mobile-page-number active" data-page="1">1</button>
+          <button class="mobile-page-btn mobile-page-number" data-page="2">2</button>
+          <button class="mobile-page-btn mobile-page-number" data-page="3">3</button>
+          <span class="mobile-page-dots">...</span>
+          <button class="mobile-page-btn mobile-page-number" data-page="999">999</button>
+        </div>
+        <button class="mobile-page-btn mobile-page-next" id="nextPageBtn">Next ›</button>
+      </div>
+      <div class="mobile-page-info">
+        Page <span id="currentPageNumber">1</span> of <span id="totalPages">999</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Footer -->
+  <footer class="mobile-footer">
+    <p>&copy; 2024 FossBOX Mobile. All rights reserved.</p>
+    <p>Powered by <a href="https://www.themoviedb.org/" target="_blank">TMDb</a></p>
+    <p><a href="../index.html">Switch to Desktop</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/mobile-app.js"></script>
+</body>
+</html>

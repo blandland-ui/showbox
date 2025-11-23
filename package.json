@@ -1,0 +1,26 @@
+{
+  "name": "blacksitedb",
+  "version": "2.0.0",
+  "description": "A clean, organized movie and TV show database website",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "node server/app.js"
+  },
+  "keywords": [
+    "movies",
+    "tv-shows",
+    "tmdb",
+    "database",
+    "streaming"
+  ],
+  "author": "BlackSiteDB",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

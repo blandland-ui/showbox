@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Player — FossBOX</title>
+    <script src="assets/js/config.js"></script>
+    <style>
+        body{background:#0f0f0f url('assets/site-bg.jpg') center center fixed;background-size:cover;color:#ddd;font-family:system-ui,Segoe UI,Roboto,Arial;margin:0;padding:20px}
+        .container{max-width:1400px;margin:24px auto;background:rgba(20, 20, 20, 0.75);border:1px solid rgba(255,255,255,0.03);border-radius:8px;padding:20px}
+        
+        /* Mobile background */
+        @media (max-width: 768px) {
+            body{background:#0f0f0f url('assets/m-site-bg.jpg') center center fixed;background-size:cover;}
+        }
+        
+        /* Main layout - centered player with controls below */
+        .player-layout{display:flex;flex-direction:column;gap:24px;align-items:center;min-height:600px}
+        
+        /* Video player section - centered */
+        .video-section{width:100%;max-width:1000px;min-width:0}
+        .player-container{width:100%;background:#000;border-radius:8px;overflow:hidden;border:1px solid #333;aspect-ratio:16/9}
+        .player-container iframe{width:100%;height:100%;border:none;background:#000}
+        .embed-placeholder{background:#000;border:1px solid #333;padding:40px;border-radius:8px;color:#9fd;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column}
+        
+        /* Controls section - positioned below player */
+        .controls-section{width:100%;max-width:1000px;min-width:320px;background:#1a1a1a;border-radius:8px;padding:20px;border:1px solid #333;background-size:cover;background-position:center;background-repeat:no-repeat;position:relative}
+        .controls-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(26,26,26,0.85);border-radius:8px;z-index:1}
+        .controls-section > *{position:relative;z-index:2}
+        
+        /* Title and meta info */
+        .title{font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:8px;line-height:1.2}
+        .subtitle{color:#aaa;margin-bottom:20px;line-height:1.4}
+        
+        /* Server selection */
+        .server-selector{margin-bottom:20px}
+        .server-selector h4{color:#fff;margin:0 0 12px 0;font-size:1.1rem}
+        .server-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .server-btn{background:#2a2a2a;color:#ddd;border:1px solid #444;padding:10px;border-radius:6px;cursor:pointer;transition:all 0.2s;text-align:center;font-size:0.9rem}
+        .server-btn:hover{background:#333;color:#fff;transform:translateY(-1px)}
+        .server-btn.active{background:#00bcd4;color:#000;border-color:#00bcd4;font-weight:600}
+        
+        /* TV Show Controls */
+        .tv-controls{margin-bottom:20px}
+        .tv-controls h4{color:#fff;margin:0 0 12px 0;font-size:1.1rem}
+        .season-selector{margin-bottom:12px}
+        .season-dropdown{width:100%;background:#2a2a2a;color:#ddd;border:1px solid #444;padding:10px;border-radius:6px;font-size:0.9rem}
+        
+        /* Episode list */
+        .episodes-list{max-height:300px;overflow-y:auto;border:1px solid #333;border-radius:6px;background:#222}
+        .episode-item{padding:12px;border-bottom:1px solid #333;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;gap:10px}
+        .episode-item:hover{background:#2a2a2a}
+        .episode-item:last-child{border-bottom:none}
+        .episode-item.current{background:#00bcd4;color:#000}
+        .episode-number{background:#444;color:#fff;padding:4px 8px;border-radius:4px;font-size:0.8rem;font-weight:600;min-width:30px;text-align:center}
+        .episode-item.current .episode-number{background:#fff;color:#00bcd4}
+        .episode-title{flex:1;font-size:0.9rem}
+        
+        /* Player controls */
+        .player-controls{margin-bottom:20px}
+        .player-controls h4{color:#fff;margin:0 0 12px 0;font-size:1.1rem}
+        .controls-grid{display:grid;gap:10px}
+        .control-row{display:flex;gap:10px;align-items:center}
+        .control-row select{flex:1;background:#2a2a2a;color:#ddd;border:1px solid #444;padding:8px;border-radius:4px}
+        .control-row label{display:flex;align-items:center;gap:6px;font-size:0.9rem;color:#aaa}
+        
+        /* Back button */
+        .back-button{width:100%;background:#333;color:#ddd;border:1px solid #555;padding:12px;border-radius:6px;cursor:pointer;margin-top:20px;font-size:0.9rem}
+        .back-button:hover{background:#444;color:#fff}
+        
+        .loading{color:#00bcd4;padding:20px}
+        
+        /* Scrollbar styling */
+        .episodes-list::-webkit-scrollbar{width:8px}
+        .episodes-list::-webkit-scrollbar-track{background:#1a1a1a}
+        .episodes-list::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
+        .episodes-list::-webkit-scrollbar-thumb:hover{background:#555}
+        
+        /* Navigation hover effects */
+        .site-nav a:hover{background:#00bcd4 !important;color:#000 !important;transform:translateY(-2px)}
+        
+        @media (max-width: 1024px) {
+            .video-section{max-width:100%}
+            .controls-section{max-width:100%;min-width:0}
+            .server-grid{grid-template-columns:1fr}
+        }
+        
+        @media (max-width: 768px) {
+            .container{padding:15px}
+            .player-layout{gap:15px}
+            .title{font-size:1.5rem}
+            .video-section{max-width:100%}
+            .controls-section{max-width:100%}
+        }
+    </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" style="height: 120px; background: linear-gradient(to bottom, rgba(26, 26, 26, 0.75), rgba(60, 60, 60, 0.75), rgba(26, 26, 26, 0.75)); position: relative; margin-bottom: 20px; display: flex; align-items: center; justify-content: center;">
+    <div class="logo" style="display: flex; align-items: center; position: absolute; left: 80px; top: 50%; transform: translateY(-50%); z-index: 10;">
+      <img src="assets/site-logo.png" alt="FossBOX Logo" style="height: 100px; margin-right: 20px; opacity: 0.5; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);">
+      <span style="font-size: 3rem; font-weight: 800; color: #00bcd4; text-shadow: 0 4px 8px rgba(0,0,0,0.8);">FossBOX</span>
+    </div>
+    
+    <!-- Header Search -->
+    <div class="header-search" style="position: absolute; top: 20px; right: 20px; z-index: 15; width: 300px;">
+      <form class="search-form" id="headerSearchForm" style="display: flex; background: rgba(0, 0, 0, 0.8); border: 1px solid #333; border-radius: 6px; overflow: hidden; backdrop-filter: blur(10px);">
+        <input type="text" id="headerSearchInput" placeholder="Search movies & TV shows..." autocomplete="off" style="flex: 1; padding: 12px 16px; background: transparent; border: none; color: #ddd; font-size: 0.9rem; outline: none;">
+        <button type="submit" class="search-btn" style="background: #00bcd4; border: none; padding: 12px 16px; color: #000; cursor: pointer; font-size: 1rem; transition: all 0.2s ease;">🔍</button>
+      </form>
+      <div class="search-results" id="headerSearchResults" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(0, 0, 0, 0.95); border: 1px solid #333; border-top: none; border-radius: 0 0 6px 6px; max-height: 400px; overflow-y: auto; backdrop-filter: blur(10px); z-index: 20;"></div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="site-nav" role="navigation" aria-label="Main navigation" style="background: linear-gradient(to bottom, rgba(20, 20, 20, 0.75), rgba(50, 50, 50, 0.75), rgba(20, 20, 20, 0.75)); padding: 15px 0; margin-bottom: 20px; border-top: 1px solid #333; border-bottom: 1px solid #333;">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+      <a href="index.html" style="color: #ddd; text-decoration: none; padding: 8px 16px; border-radius: 4px; transition: all 0.2s; font-weight: 500;">HOME</a>
+      <a href="pages/where-to-watch.html" style="color: #ddd; text-decoration: none; padding: 8px 16px; border-radius: 4px; transition: all 0.2s; font-weight: 500;">Where To Watch</a>
+      <a href="pages/movies.html" style="color: #ddd; text-decoration: none; padding: 8px 16px; border-radius: 4px; transition: all 0.2s; font-weight: 500;">Movies</a>
+      <a href="pages/tv.html" style="color: #ddd; text-decoration: none; padding: 8px 16px; border-radius: 4px; transition: all 0.2s; font-weight: 500;">TV Shows</a>
+      <a href="pages/cartoons.html" style="color: #ddd; text-decoration: none; padding: 8px 16px; border-radius: 4px; transition: all 0.2s; font-weight: 500;">Cartoons/Anime</a>
+      <a href="pages/about.html" style="color: #ddd; text-decoration: none; padding: 8px 16px; border-radius: 4px; transition: all 0.2s; font-weight: 500;">About</a>
+    </div>
+  </nav>
+
+<div class="container" id="app">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Page location" style="margin-bottom: 20px; padding: 10px 0; color: #aaa; font-size: 0.9rem;">
+      <a href="index.html" style="color: #00bcd4; text-decoration: none;">Home</a> 
+      <span style="margin: 0 8px; color: #666;">›</span>
+      <span style="color: #ddd;" id="breadcrumb-title">Player</span>
+    </nav>
+
+    <div class="player-layout">
+        <!-- Left Side - Video Player -->
+        <div class="video-section">
+            <div class="player-container" id="playerContainer">
+                <div class="embed-placeholder" id="embedArea">
+                    <div class="loading">🎬 Select a server to start watching</div>
+                    <div style="color:#aaa;font-size:0.9em;margin-top:10px;">Choose a server from the controls to load the video player</div>
+                </div>
+            </div>
+            
+            <!-- Description Section -->
+            <div class="description-section" id="descriptionSection" style="margin-top:20px;background:#1a1a1a;border-radius:8px;padding:20px;border:1px solid #333;display:none;">
+                <h3 style="color:#fff;margin:0 0 15px 0;font-size:1.2rem;">Description</h3>
+                <p id="movieDescription" style="color:#ddd;line-height:1.6;margin:0;"></p>
+            </div>
+        </div>
+
+        <!-- Right Side - Controls and Info -->
+        <div class="controls-section" id="controlsSection">
+            <!-- Title and Info -->
+            <div id="title" class="title">Loading...</div>
+            <div id="subtitle" class="subtitle">Please wait...</div>
+            
+            <!-- Server Selection -->
+            <div class="server-selector" id="serverSelector" style="display:none;">
+                <h4>Select Server</h4>
+                <div class="server-grid">
+                    <button class="server-btn active" data-server="vidsrc-embed.ru">VidSrc Embed</button>
+                    <button class="server-btn" data-server="vidsrcme.ru">VidSrc ME</button>
+                    <button class="server-btn" data-server="vidsrc-me.ru">VidSrc Alt</button>
+                    <button class="server-btn" data-server="vsrc.su">VSrc</button>
+                    <button class="server-btn" data-server="vidsrc-embed.su">VidSrc SU</button>
+                    <button class="server-btn" data-server="vidsrcme.su">VidSrc ME SU</button>
+                    <button class="server-btn" data-server="autoembed.cc">AutoEmbed</button>
+                    <button class="server-btn" data-server="vidlink.pro">VidLink</button>
+                </div>
+            </div>
+
+            <!-- TV Show Controls -->
+            <div class="tv-controls" id="tvControls" style="display:none;">
+                <h4>Episodes</h4>
+                <div class="season-selector">
+                    <select class="season-dropdown" id="seasonSelect">
+                        <option value="">Loading seasons...</option>
+                    </select>
+                </div>
+                <div class="episodes-list" id="episodesList">
+                    <div style="padding:20px;text-align:center;color:#aaa;">Select a season to view episodes</div>
+                </div>
+            </div>
+
+            <!-- Player Controls -->
+            <div class="player-controls" id="playerControls" style="display:none;">
+                <h4>Player Settings</h4>
+                <div class="controls-grid">
+                    <div class="control-row">
+                        <label for="qualitySelect" style="color: #ddd; font-size: 0.9rem; margin-bottom: 4px; display: block;">Video Quality</label>
+                        <select id="qualitySelect" style="width: 100%; background: #2a2a2a; color: #ddd; border: 1px solid #444; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
+                            <option value="auto">Auto (Best Available)</option>
+                            <option value="1080">1080p (Full HD)</option>
+                            <option value="720">720p (HD)</option>
+                            <option value="480">480p (SD)</option>
+                            <option value="360">360p</option>
+                        </select>
+                    </div>
+                    <div class="control-row">
+                        <label for="languageSelect" style="color: #ddd; font-size: 0.9rem; margin-bottom: 4px; display: block;">Language</label>
+                        <select id="languageSelect" style="width: 100%; background: #2a2a2a; color: #ddd; border: 1px solid #444; padding: 8px; border-radius: 4px;">
+                            <option value="">Default Language</option>
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="it">Italian</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ru">Russian</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                        </select>
+                    </div>
+                    <div class="control-row">
+                        <label>
+                            <input type="checkbox" id="autoplayCheck" checked> Autoplay
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back Navigation -->
+            <button class="back-button" onclick="history.back()">
+                ← Back to Browse
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+class VideoPlayer {
+    constructor() {
+        this.servers = [
+            { name: 'VidSrc Embed', domain: 'vidsrc-embed.ru', active: true },
+            { name: 'VidSrc ME', domain: 'vidsrcme.ru', active: true },
+            { name: 'VidSrc Alt', domain: 'vidsrc-me.ru', active: true },
+            { name: 'VSrc', domain: 'vsrc.su', active: true },
+            { name: 'VidSrc SU', domain: 'vidsrc-embed.su', active: true },
+            { name: 'VidSrc ME SU', domain: 'vidsrcme.su', active: true },
+            { name: 'AutoEmbed', domain: 'autoembed.cc', active: true },
+            { name: 'VidLink', domain: 'vidlink.pro', active: true }
+        ];
+        
+        this.currentServer = 'vidsrc-embed.ru';
+        this.movieData = null;
+        this.seasonsData = null;
+        this.currentSeason = 1;
+        this.currentEpisode = 1;
+        this.preferredQuality = 'auto'; // Default to auto-select best quality
+        this.availableQualities = ['1080', '720', '480', '360'];
+        this.init();
+    }
+
+    getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            tmdbId: params.get('tmdb') || params.get('id') || params.get('video'),
+            imdbId: params.get('imdb'),
+            type: params.get('type') || 'movie',
+            season: parseInt(params.get('season') || params.get('s')) || 1,
+            episode: parseInt(params.get('episode') || params.get('e')) || 1,
+            title: params.get('title')
+        };
+    }
+
+    async init() {
+        const params = this.getUrlParams();
+        
+        if (!params.tmdbId && !params.imdbId) {
+            this.showError('No movie/TV show ID provided');
+            return;
+        }
+
+        // Set current season/episode from URL
+        this.currentSeason = params.season;
+        this.currentEpisode = params.episode;
+
+        try {
+            await this.loadMovieData(params.tmdbId, params.type, params.imdbId);
+            
+            // Load TV show seasons if it's a TV show
+            if (this.movieData.type === 'tv') {
+                await this.loadSeasons(params.tmdbId);
+            }
+            
+            this.setupUI();
+            
+            // Setup TV controls if it's a TV show
+            if (this.movieData.type === 'tv') {
+                this.setupTVControls();
+            }
+            
+        } catch (error) {
+            console.error('Failed to initialize player:', error);
+            this.showError('Failed to load movie data');
+        }
+    }
+
+    async loadMovieData(tmdbId, type = 'movie', imdbId = null) {
+        // Try to get API key from config
+        const API_KEY = window.TMDB_API_KEY || window.FossBOXConfig?.api?.tmdb?.key;
+        
+        if (!API_KEY) {
+            console.error('No TMDb API key found');
+            // Use fallback data if no API key
+            this.movieData = {
+                id: tmdbId,
+                imdb_id: imdbId,
+                title: `${type === 'movie' ? 'Movie' : 'TV Show'} ID: ${tmdbId}`,
+                name: `${type === 'movie' ? 'Movie' : 'TV Show'} ID: ${tmdbId}`,
+                overview: 'Loading movie information...',
+                poster_path: null,
+                release_date: '2024',
+                first_air_date: '2024',
+                type: type,
+                number_of_seasons: type === 'tv' ? 3 : 0
+            };
+            return;
+        }
+
+        try {
+            const url = `https://api.themoviedb.org/3/${type}/${tmdbId}?api_key=${API_KEY}&append_to_response=external_ids`;
+            console.log('Loading movie data from:', url);
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            this.movieData = await response.json();
+            this.movieData.type = type;
+            
+            console.log('Loaded movie data:', this.movieData);
+            
+            // Get IMDB ID if not provided
+            if (!imdbId && this.movieData.external_ids?.imdb_id) {
+                this.movieData.imdb_id = this.movieData.external_ids.imdb_id;
+            } else if (imdbId) {
+                this.movieData.imdb_id = imdbId;
+            }
+            
+        } catch (error) {
+            console.error('Failed to fetch movie data:', error);
+            // Better fallback data with actual content name attempt
+            this.movieData = {
+                id: tmdbId,
+                imdb_id: imdbId,
+                title: `Content ${tmdbId}`,
+                name: `Content ${tmdbId}`,
+                overview: 'Could not load detailed information.',
+                poster_path: null,
+                release_date: '2024',
+                first_air_date: '2024',
+                type: type,
+                number_of_seasons: type === 'tv' ? 3 : 0
+            };
+        }
+    }
+
+    async loadSeasons(tmdbId) {
+        const API_KEY = window.TMDB_API_KEY || window.FossBOXConfig?.api?.tmdb?.key;
+        
+        if (!API_KEY) {
+            console.warn('No TMDb API key found, using fallback seasons data');
+            // Create fallback seasons data
+            this.seasonsData = [];
+            const numSeasons = this.movieData.number_of_seasons || 3;
+            for (let i = 1; i <= numSeasons; i++) {
+                const episodes = [];
+                for (let j = 1; j <= 12; j++) {
+                    episodes.push({
+                        episode_number: j,
+                        name: `Episode ${j}`,
+                        overview: `Episode ${j} description.`
+                    });
+                }
+                this.seasonsData.push({
+                    season_number: i,
+                    name: `Season ${i}`,
+                    episode_count: 12,
+                    episodes: episodes
+                });
+            }
+            console.log('Created fallback seasons:', this.seasonsData);
+            return;
+        }
+
+        try {
+            // Load all seasons
+            this.seasonsData = [];
+            const numSeasons = this.movieData.number_of_seasons || 3;
+            console.log(`Loading ${numSeasons} seasons for TMDb ID: ${tmdbId}`);
+            
+            for (let seasonNum = 1; seasonNum <= numSeasons; seasonNum++) {
+                try {
+                    const seasonUrl = `https://api.themoviedb.org/3/tv/${tmdbId}/season/${seasonNum}?api_key=${API_KEY}`;
+                    console.log(`Loading season ${seasonNum} from:`, seasonUrl);
+                    const seasonResponse = await fetch(seasonUrl);
+                    
+                    if (seasonResponse.ok) {
+                        const seasonData = await seasonResponse.json();
+                        console.log(`Loaded season ${seasonNum}:`, seasonData);
+                        this.seasonsData.push(seasonData);
+                    } else {
+                        console.warn(`Failed to load season ${seasonNum}, using fallback`);
+                        // Add fallback season
+                        const episodes = [];
+                        for (let j = 1; j <= 12; j++) {
+                            episodes.push({
+                                episode_number: j,
+                                name: `Episode ${j}`,
+                                overview: `Episode ${j} description.`
+                            });
+                        }
+                        this.seasonsData.push({
+                            season_number: seasonNum,
+                            name: `Season ${seasonNum}`,
+                            episode_count: 12,
+                            episodes: episodes
+                        });
+                    }
+                } catch (error) {
+                    console.error(`Failed to load season ${seasonNum}:`, error);
+                    // Add fallback season
+                    const episodes = [];
+                    for (let j = 1; j <= 12; j++) {
+                        episodes.push({
+                            episode_number: j,
+                            name: `Episode ${j}`,
+                            overview: `Episode ${j} description.`
+                        });
+                    }
+                    this.seasonsData.push({
+                        season_number: seasonNum,
+                        name: `Season ${seasonNum}`,
+                        episode_count: 12,
+                        episodes: episodes
+                    });
+                }
+            }
+            
+            console.log('Final seasons data:', this.seasonsData);
+            
+        } catch (error) {
+            console.error('Failed to load seasons:', error);
+            // Better fallback with multiple seasons
+            this.seasonsData = [];
+            for (let i = 1; i <= 3; i++) {
+                const episodes = [];
+                for (let j = 1; j <= 12; j++) {
+                    episodes.push({
+                        episode_number: j,
+                        name: `Episode ${j}`,
+                        overview: `Episode ${j} description.`
+                    });
+                }
+                this.seasonsData.push({
+                    season_number: i,
+                    name: `Season ${i}`,
+                    episode_count: 12,
+                    episodes: episodes
+                });
+            }
+        }
+    }
+
+    setupUI() {
+        const titleEl = document.getElementById('title');
+        const subtitleEl = document.getElementById('subtitle');
+        const controlsSection = document.getElementById('controlsSection');
+        const serverSelector = document.getElementById('serverSelector');
+        const playerControls = document.getElementById('playerControls');
+        const tvControls = document.getElementById('tvControls');
+        const breadcrumbTitle = document.getElementById('breadcrumb-title');
+        const descriptionSection = document.getElementById('descriptionSection');
+        const movieDescription = document.getElementById('movieDescription');
+
+        // Set title and info
+        const mainTitle = this.movieData.title || this.movieData.name || 'Unknown Title';
+        titleEl.textContent = mainTitle;
+        
+        // Update breadcrumb
+        if (breadcrumbTitle) {
+            breadcrumbTitle.textContent = mainTitle;
+        }
+
+        // Set background image for controls section
+        if (this.movieData.poster_path) {
+            const posterUrl = `https://image.tmdb.org/t/p/w500${this.movieData.poster_path}`;
+            controlsSection.style.backgroundImage = `url('${posterUrl}')`;
+        }
+        
+        const year = this.movieData.release_date || this.movieData.first_air_date;
+        const yearText = year ? year.split('-')[0] : 'Unknown';
+        
+        let subtitleText = `${this.movieData.type === 'movie' ? 'Movie' : 'TV Show'} • ${yearText}`;
+        
+        // Add season/episode info for TV shows
+        if (this.movieData.type === 'tv') {
+            subtitleText += ` • S${this.currentSeason}E${this.currentEpisode}`;
+        }
+        
+        subtitleText += this.movieData.overview ? `<br><small style="color:#aaa;">${this.movieData.overview.substring(0, 120)}...</small>` : '';
+        
+        subtitleEl.innerHTML = subtitleText;
+
+        // Show description
+        if (this.movieData.overview) {
+            movieDescription.textContent = this.movieData.overview;
+            descriptionSection.style.display = 'block';
+        }
+
+        // Show controls
+        serverSelector.style.display = 'block';
+        playerControls.style.display = 'block';
+        
+        // Show TV controls for TV shows
+        if (this.movieData.type === 'tv') {
+            tvControls.style.display = 'block';
+        }
+
+        // Setup server buttons
+        this.setupServerButtons();
+        
+        // Setup quality controls
+        this.setupQualityControls();
+        
+        // Load default server
+        this.loadServer(this.currentServer);
+    }
+
+    setupTVControls() {
+        if (!this.seasonsData || this.movieData.type !== 'tv') {
+            console.log('TV controls not needed:', { seasonsData: !!this.seasonsData, type: this.movieData.type });
+            return;
+        }
+        
+        console.log('Setting up TV controls with seasons:', this.seasonsData);
+        
+        const seasonSelect = document.getElementById('seasonSelect');
+        const episodesList = document.getElementById('episodesList');
+        
+        if (!seasonSelect || !episodesList) {
+            console.error('TV control elements not found');
+            return;
+        }
+        
+        // Populate season dropdown
+        seasonSelect.innerHTML = '';
+        this.seasonsData.forEach(season => {
+            const option = document.createElement('option');
+            option.value = season.season_number;
+            option.textContent = season.name || `Season ${season.season_number}`;
+            if (season.season_number === this.currentSeason) {
+                option.selected = true;
+            }
+            seasonSelect.appendChild(option);
+        });
+        
+        console.log(`Added ${this.seasonsData.length} seasons to dropdown`);
+        
+        // Handle season change
+        seasonSelect.addEventListener('change', (e) => {
+            const newSeason = parseInt(e.target.value);
+            console.log(`Season changed from ${this.currentSeason} to ${newSeason}`);
+            this.currentSeason = newSeason;
+            this.currentEpisode = 1; // Reset to first episode
+            this.updateEpisodesList();
+            this.updateSubtitle();
+            this.updateURL();
+            this.loadServer(this.currentServer);
+        });
+        
+        // Load initial episodes
+        this.updateEpisodesList();
+    }
+
+    updateEpisodesList() {
+        const episodesList = document.getElementById('episodesList');
+        const currentSeasonData = this.seasonsData.find(s => s.season_number === this.currentSeason);
+        
+        if (!currentSeasonData) {
+            console.error(`No season data found for season ${this.currentSeason}`);
+            episodesList.innerHTML = '<div style="padding:20px;text-align:center;color:#aaa;">No episodes found for this season</div>';
+            return;
+        }
+        
+        console.log('Updating episodes list for season:', currentSeasonData);
+        
+        episodesList.innerHTML = '';
+        
+        // If we have episode data, use it; otherwise create generic episodes
+        const episodes = currentSeasonData.episodes && currentSeasonData.episodes.length > 0 
+            ? currentSeasonData.episodes 
+            : Array.from({length: currentSeasonData.episode_count || 12}, (_, i) => ({
+                episode_number: i + 1,
+                name: `Episode ${i + 1}`,
+                overview: 'No description available.'
+            }));
+        
+        console.log(`Found ${episodes.length} episodes for season ${this.currentSeason}`);
+        
+        episodes.forEach(episode => {
+            const episodeEl = document.createElement('div');
+            episodeEl.className = 'episode-item';
+            if (episode.episode_number === this.currentEpisode) {
+                episodeEl.classList.add('current');
+            }
+            
+            episodeEl.innerHTML = `
+                <div class="episode-number">${episode.episode_number}</div>
+                <div class="episode-title">
+                    <div style="font-weight:600;">${episode.name || `Episode ${episode.episode_number}`}</div>
+                    ${episode.overview && episode.overview !== 'No description available.' ? `<div style="font-size:0.8em;color:#aaa;margin-top:2px;">${episode.overview.substring(0, 60)}...</div>` : ''}
+                </div>
+            `;
+            
+            episodeEl.addEventListener('click', () => {
+                console.log(`Episode clicked: S${this.currentSeason}E${episode.episode_number}`);
+                // Remove current class from all episodes
+                episodesList.querySelectorAll('.episode-item').forEach(el => el.classList.remove('current'));
+                // Add current class to clicked episode
+                episodeEl.classList.add('current');
+                
+                this.currentEpisode = episode.episode_number;
+                this.updateURL();
+                this.updateSubtitle();
+                this.loadServer(this.currentServer);
+            });
+            
+            episodesList.appendChild(episodeEl);
+        });
+    }
+
+    updateSubtitle() {
+        const subtitleEl = document.getElementById('subtitle');
+        const movieDescription = document.getElementById('movieDescription');
+        const year = this.movieData.release_date || this.movieData.first_air_date;
+        const yearText = year ? year.split('-')[0] : 'Unknown';
+        
+        let subtitleText = `${this.movieData.type === 'movie' ? 'Movie' : 'TV Show'} • ${yearText}`;
+        
+        if (this.movieData.type === 'tv') {
+            subtitleText += ` • S${this.currentSeason}E${this.currentEpisode}`;
+            
+            // Try to get episode-specific description
+            const currentSeasonData = this.seasonsData.find(s => s.season_number === this.currentSeason);
+            if (currentSeasonData && currentSeasonData.episodes) {
+                const currentEpisode = currentSeasonData.episodes.find(ep => ep.episode_number === this.currentEpisode);
+                if (currentEpisode && currentEpisode.overview) {
+                    movieDescription.textContent = currentEpisode.overview;
+                } else if (this.movieData.overview) {
+                    movieDescription.textContent = this.movieData.overview;
+                }
+            }
+        }
+        
+        subtitleEl.innerHTML = subtitleText;
+    }
+
+    updateURL() {
+        const params = new URLSearchParams(window.location.search);
+        if (this.movieData.type === 'tv') {
+            params.set('season', this.currentSeason);
+            params.set('episode', this.currentEpisode);
+        }
+        const newURL = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, '', newURL);
+    }
+
+    setupServerButtons() {
+        const serverButtons = document.querySelectorAll('.server-btn');
+        
+        serverButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                serverButtons.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                const server = btn.dataset.server;
+                this.currentServer = server;
+                this.loadServer(server);
+            });
+        });
+    }
+
+    setupQualityControls() {
+        const qualitySelect = document.getElementById('qualitySelect');
+        const languageSelect = document.getElementById('languageSelect');
+        const autoplayCheck = document.getElementById('autoplayCheck');
+        
+        // Set default quality to auto (which will select best available)
+        qualitySelect.value = 'auto';
+        this.setOptimalQuality();
+        
+        // Handle quality change
+        qualitySelect.addEventListener('change', (e) => {
+            this.preferredQuality = e.target.value;
+            console.log('Quality changed to:', this.preferredQuality);
+            this.loadServer(this.currentServer);
+        });
+        
+        // Handle language change
+        if (languageSelect) {
+            languageSelect.addEventListener('change', () => {
+                this.loadServer(this.currentServer);
+            });
+        }
+        
+        // Handle autoplay change
+        if (autoplayCheck) {
+            autoplayCheck.addEventListener('change', () => {
+                this.loadServer(this.currentServer);
+            });
+        }
+    }
+
+    setOptimalQuality() {
+        // Auto-select best quality based on preference: 1080p > 720p > 480p > 360p
+        const qualityPreference = ['1080', '720', '480', '360'];
+        
+        if (this.preferredQuality === 'auto') {
+            // Select the highest available quality
+            for (const quality of qualityPreference) {
+                if (this.availableQualities.includes(quality)) {
+                    this.preferredQuality = quality;
+                    console.log('Auto-selected quality:', quality + 'p');
+                    break;
+                }
+            }
+        }
+        
+        // Update the select element to show current selection
+        const qualitySelect = document.getElementById('qualitySelect');
+        if (qualitySelect && this.preferredQuality !== 'auto') {
+            // Show which quality was auto-selected
+            const autoOption = qualitySelect.querySelector('option[value="auto"]');
+            if (autoOption) {
+                autoOption.textContent = `Auto (${this.preferredQuality}p Selected)`;
+            }
+        }
+    }
+
+    buildEmbedUrl(server, options = {}) {
+        const { language, autoplay = true } = options;
+        
+        // Special handling for AutoEmbed
+        if (server === 'autoembed.cc') {
+            return this.buildAutoEmbedUrl(options);
+        }
+        
+        // Special handling for VidLink
+        if (server === 'vidlink.pro') {
+            return this.buildVidLinkUrl(options);
+        }
+        
+        let baseUrl = `https://${server}/embed`;
+        let urlParams = new URLSearchParams();
+        
+        // Determine if it's movie or TV
+        const isTV = this.movieData.type === 'tv';
+        baseUrl += isTV ? '/tv' : '/movie';
+        
+        // Add ID (prefer IMDB if available, fallback to TMDB)
+        const id = this.movieData.imdb_id || this.movieData.id;
+        
+        if (this.movieData.imdb_id) {
+            urlParams.set('imdb', id);
+        } else {
+            urlParams.set('tmdb', id);
+        }
+        
+        // Add optional parameters
+        if (language) {
+            urlParams.set('ds_lang', language);
+        }
+        
+        if (autoplay !== undefined) {
+            urlParams.set('autoplay', autoplay ? '1' : '0');
+        }
+        
+        // Add quality parameter
+        if (this.preferredQuality && this.preferredQuality !== 'auto') {
+            // Try different quality parameter names that embed services might use
+            urlParams.set('quality', this.preferredQuality);
+            urlParams.set('res', this.preferredQuality);
+            urlParams.set('resolution', this.preferredQuality + 'p');
+        }
+        
+        // For TV shows, add current season/episode
+        if (isTV) {
+            urlParams.set('s', this.currentSeason);
+            urlParams.set('e', this.currentEpisode);
+        }
+        
+        const queryString = urlParams.toString();
+        const finalUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+        
+        console.log(`Built embed URL for ${isTV ? 'TV' : 'Movie'} S${this.currentSeason}E${this.currentEpisode}:`, finalUrl);
+        return finalUrl;
+    }
+
+    buildAutoEmbedUrl(options = {}) {
+        const isTV = this.movieData.type === 'tv';
+        let embedUrl;
+        
+        if (isTV) {
+            // Format: https://player.autoembed.cc/embed/tv/{tmdb_id}/{season}/{episode}?server={server number}
+            const tmdbId = this.movieData.id;
+            embedUrl = `https://player.autoembed.cc/embed/tv/${tmdbId}/${this.currentSeason}/${this.currentEpisode}?server=2`;
+        } else {
+            // Format: https://player.autoembed.cc/embed/movie/{imdb_id}?server={server number}
+            // AutoEmbed requires IMDB ID for movies (format: tt1234567)
+            let movieId = this.movieData.imdb_id;
+            
+            // If no IMDB ID, try to use TMDB ID (though AutoEmbed prefers IMDB for movies)
+            if (!movieId) {
+                movieId = `tt${this.movieData.id}`; // Fallback - may not work without real IMDB ID
+                console.warn('AutoEmbed works best with IMDB IDs for movies. Using TMDB ID as fallback.');
+            }
+            
+            embedUrl = `https://player.autoembed.cc/embed/movie/${movieId}?server=2`;
+        }
+        
+        console.log(`Built AutoEmbed URL for ${isTV ? 'TV' : 'Movie'}:`, embedUrl);
+        return embedUrl;
+    }
+
+    buildVidLinkUrl(options = {}) {
+        const isTV = this.movieData.type === 'tv';
+        let embedUrl;
+        
+        if (isTV) {
+            // Format: https://vidlink.pro/tv/{tmdbId}/{season}/{episode}
+            const tmdbId = this.movieData.id;
+            embedUrl = `https://vidlink.pro/tv/${tmdbId}/${this.currentSeason}/${this.currentEpisode}`;
+        } else {
+            // Format: https://vidlink.pro/movie/{tmdbId}
+            const tmdbId = this.movieData.id;
+            embedUrl = `https://vidlink.pro/movie/${tmdbId}`;
+        }
+        
+        console.log(`Built VidLink URL for ${isTV ? 'TV' : 'Movie'}:`, embedUrl);
+        return embedUrl;
+    }
+
+    loadServer(server) {
+        const embedArea = document.getElementById('embedArea');
+        const languageSelect = document.getElementById('languageSelect');
+        const autoplayCheck = document.getElementById('autoplayCheck');
+        
+        embedArea.innerHTML = '<div class="loading">🎬 Loading player...</div>';
+        
+        try {
+            const embedUrl = this.buildEmbedUrl(server, {
+                language: languageSelect.value,
+                autoplay: autoplayCheck.checked
+            });
+            
+            console.log('Loading embed URL:', embedUrl);
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = embedUrl;
+            iframe.width = '100%';
+            iframe.height = '500';
+            iframe.frameBorder = '0';
+            iframe.allowFullscreen = true;
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            
+            // Handle iframe load
+            iframe.onload = () => {
+                console.log('Iframe loaded successfully');
+            };
+            
+            iframe.onerror = () => {
+                console.error('Failed to load iframe');
+                embedArea.innerHTML = `
+                    <div class="embed-placeholder">
+                        <div style="color:#ff6b6b;">❌ Failed to load from ${server}</div>
+                        <div style="color:#aaa;font-size:0.9em;margin-top:10px;">Try selecting a different server</div>
+                    </div>
+                `;
+            };
+            
+            embedArea.innerHTML = '';
+            embedArea.appendChild(iframe);
+            
+        } catch (error) {
+            console.error('Error loading server:', error);
+            embedArea.innerHTML = `
+                <div class="embed-placeholder">
+                    <div style="color:#ff6b6b;">❌ Error loading player</div>
+                    <div style="color:#aaa;font-size:0.9em;margin-top:10px;">Please try a different server</div>
+                </div>
+            `;
+        }
+    }
+
+    showError(message) {
+        const titleEl = document.getElementById('title');
+        const subtitleEl = document.getElementById('subtitle');
+        const embedArea = document.getElementById('embedArea');
+        const posterEl = document.getElementById('poster');
+        
+        titleEl.textContent = 'Error';
+        subtitleEl.textContent = message;
+        embedArea.innerHTML = `<div class="embed-placeholder">❌ ${message}</div>`;
+        posterEl.src = 'https://via.placeholder.com/220x320/333/fff?text=Error';
+    }
+}
+
+// Initialize player when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Add event listeners for controls
+    const languageSelect = document.getElementById('languageSelect');
+    const autoplayCheck = document.getElementById('autoplayCheck');
+    
+    let player;
+    
+    // Initialize player
+    player = new VideoPlayer();
+    
+    // Update player when controls change
+    languageSelect?.addEventListener('change', () => {
+        if (player && player.currentServer) {
+            player.loadServer(player.currentServer);
+        }
+    });
+    
+    autoplayCheck?.addEventListener('change', () => {
+        if (player && player.currentServer) {
+            player.loadServer(player.currentServer);
+        }
+    });
+
+    // Initialize header search
+    class PlayerHeaderSearch {
+        constructor() {
+            this.searchForm = document.getElementById('headerSearchForm');
+            this.searchInput = document.getElementById('headerSearchInput');
+            this.searchResults = document.getElementById('headerSearchResults');
+            this.debounceTimer = null;
+            
+            if (this.searchForm && this.searchInput) {
+                this.init();
+            }
+        }
+
+        init() {
+            // Handle form submission
+            this.searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.performSearch(this.searchInput.value.trim());
+            });
+
+            // Handle input with debouncing
+            this.searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+                
+                clearTimeout(this.debounceTimer);
+                
+                if (query.length < 2) {
+                    this.hideResults();
+                    return;
+                }
+
+                this.debounceTimer = setTimeout(() => {
+                    this.performSearch(query);
+                }, 300);
+            });
+
+            // Handle clicks outside to close results
+            document.addEventListener('click', (e) => {
+                if (!this.searchForm.contains(e.target)) {
+                    this.hideResults();
+                }
+            });
+        }
+
+        async performSearch(query) {
+            if (!query) return;
+
+            const API_KEY = window.TMDB_API_KEY;
+            if (!API_KEY) {
+                this.showError('Search unavailable');
+                return;
+            }
+
+            try {
+                const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                this.displayResults(data.results.slice(0, 8));
+                
+            } catch (error) {
+                console.error('Search failed:', error);
+                this.showError('Search failed');
+            }
+        }
+
+        displayResults(results) {
+            if (!results || results.length === 0) {
+                this.searchResults.innerHTML = '<div style="padding: 20px; text-align: center; color: #aaa;">No results found</div>';
+                this.showResults();
+                return;
+            }
+
+            const resultsHTML = results.map(item => {
+                const title = item.title || item.name || 'Unknown Title';
+                const year = item.release_date || item.first_air_date 
+                    ? new Date(item.release_date || item.first_air_date).getFullYear()
+                    : '';
+                const mediaType = item.media_type === 'tv' ? 'TV Show' : 'Movie';
+                const posterUrl = item.poster_path 
+                    ? `https://image.tmdb.org/t/p/w92${item.poster_path}`
+                    : 'https://via.placeholder.com/40x60/333/fff?text=No+Image';
+
+                return `
+                    <div class="search-result-item" data-id="${item.id}" data-type="${item.media_type || 'movie'}" data-title="${encodeURIComponent(title)}" style="display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #333; cursor: pointer; transition: background 0.2s ease;">
+                        <img src="${posterUrl}" alt="${title}" style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 12px; background: #222;" loading="lazy">
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-weight: 600; margin-bottom: 4px;">${title}</div>
+                            <div style="color: #aaa; font-size: 0.8rem;">${mediaType}${year ? ` • ${year}` : ''}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            this.searchResults.innerHTML = resultsHTML;
+            
+            // Add click handlers
+            this.searchResults.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('mouseover', () => item.style.background = 'rgba(255, 255, 255, 0.1)');
+                item.addEventListener('mouseout', () => item.style.background = 'transparent');
+                item.addEventListener('click', () => {
+                    const id = item.dataset.id;
+                    const type = item.dataset.type;
+                    const title = decodeURIComponent(item.dataset.title);
+                    
+                    // Navigate to player
+                    window.location.href = `player.html?id=${id}&type=${type}&title=${encodeURIComponent(title)}`;
+                });
+            });
+
+            this.showResults();
+        }
+
+        showError(message) {
+            this.searchResults.innerHTML = `<div style="padding: 20px; text-align: center; color: #aaa;">${message}</div>`;
+            this.showResults();
+        }
+
+        showResults() {
+            this.searchResults.style.display = 'block';
+        }
+
+        hideResults() {
+            this.searchResults.style.display = 'none';
+        }
+    }
+
+    // Initialize search
+    new PlayerHeaderSearch();
+});
+</script>
+</body>
+</html>
