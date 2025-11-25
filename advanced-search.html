@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Advanced Search - Filter movies and TV shows by multiple criteria">
+  <title>Advanced Search - FossBOX</title>
+  
+  <!-- DevTools Protection Override -->
+  <script src="assets/js/devtools-protection-override.js"></script>
+  
+  <!-- Authentication Check -->
+  <script src="auth-check.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  
+  <!-- Configuration -->
+  <script src="assets/js/config.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" style="height: 200px; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)); position: relative; display: flex; align-items: center; justify-content: center;">
+    <div class="logo" style="display: flex; align-items: center; position: absolute; left: 80px; top: 50%; transform: translateY(-50%); z-index: 10;">
+      <img src="assets/site-logo.png" alt="FossBOX Logo" style="height: 100px; margin-right: 20px; opacity: 0.5; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);">
+      <span style="font-size: 3rem; font-weight: 800; color: #A3FC13; text-shadow: 0 4px 8px rgba(0,0,0,0.8);">FossBOX</span>
+    </div>
+    
+    <!-- Header Search -->
+    <div class="header-search">
+      <form class="search-form" id="headerSearchForm">
+        <input type="text" id="headerSearchInput" placeholder="Search movies & TV shows..." autocomplete="off">
+        <button type="submit" class="search-btn">🔍</button>
+      </form>
+      <div class="search-results" id="headerSearchResults" style="display: none;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="site-nav" role="navigation" aria-label="Main navigation">
+      <a href="index.html">HOME</a>
+      <a href="pages/movies.html">Movies</a>
+      <a href="pages/tv.html">TV Shows</a>
+      <a href="pages/cartoons.html">Cartoons/Anime</a>
+      <a href="randomizer.html">Random Discover</a>
+      <a href="pages/about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="main-wrap" style="max-width: 1400px; margin: 40px auto; padding: 0 40px;">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="margin-bottom: 30px;">
+      <a href="index.html" style="color: var(--accent-primary);">Home</a>
+      <span style="color: var(--text-dim); margin: 0 8px;">›</span>
+      <span style="color: var(--text-primary); font-weight: 500;">Advanced Search</span>
+    </nav>
+
+    <!-- Page Title -->
+    <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--accent-primary);">Advanced Search</h1>
+    <p style="color: var(--text-dim); margin-bottom: 40px; font-size: 1.1rem;">Filter movies and TV shows using multiple criteria</p>
+
+    <!-- Advanced Search Form -->
+    <div class="advanced-search-container" style="background: var(--bg-secondary); padding: 40px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin-bottom: 40px;">
+      <form id="advancedSearchForm">
+        
+        <!-- Content Type Selection -->
+        <div class="filter-section" style="margin-bottom: 35px;">
+          <label style="display: block; font-size: 1.2rem; font-weight: 600; color: var(--accent-primary); margin-bottom: 15px;">Content Type</label>
+          <div style="display: flex; gap: 20px;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="radio" name="contentType" value="movie" checked style="margin-right: 8px; cursor: pointer;">
+              <span style="font-size: 1rem;">Movies</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="radio" name="contentType" value="tv" style="margin-right: 8px; cursor: pointer;">
+              <span style="font-size: 1rem;">TV Shows</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- List Selection -->
+        <div class="filter-section" style="margin-bottom: 35px;">
+          <label for="listSelect" style="display: block; font-size: 1.2rem; font-weight: 600; color: var(--accent-primary); margin-bottom: 15px;">
+            Filter from Specific List
+            <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: 400; margin-left: 10px;">(Optional - Leave blank to search all content)</span>
+          </label>
+          <select id="listSelect" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer;">
+            <option value="">All Content</option>
+            <option value="trending">Trending This Week</option>
+            <option value="popular">Popular</option>
+            <option value="top_rated">Top Rated</option>
+            <option value="now_playing">Now Playing (Movies)</option>
+            <option value="upcoming">Upcoming (Movies)</option>
+            <option value="airing_today">Airing Today (TV)</option>
+            <option value="on_the_air">On The Air (TV)</option>
+          </select>
+        </div>
+
+        <!-- Filter Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 35px;">
+          
+          <!-- Year Range -->
+          <div class="filter-section">
+            <label style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Year</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <label for="yearFrom" style="font-size: 0.85rem; color: var(--text-dim); display: block; margin-bottom: 5px;">From</label>
+                <input type="number" id="yearFrom" placeholder="1900" min="1900" max="2025" style="width: 100%; padding: 10px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+              </div>
+              <div>
+                <label for="yearTo" style="font-size: 0.85rem; color: var(--text-dim); display: block; margin-bottom: 5px;">To</label>
+                <input type="number" id="yearTo" placeholder="2025" min="1900" max="2025" style="width: 100%; padding: 10px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Language -->
+          <div class="filter-section">
+            <label for="language" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Language</label>
+            <select id="language" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; cursor: pointer;">
+              <option value="">Any Language</option>
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+              <option value="it">Italian</option>
+              <option value="ja">Japanese</option>
+              <option value="ko">Korean</option>
+              <option value="zh">Chinese</option>
+              <option value="pt">Portuguese</option>
+              <option value="ru">Russian</option>
+              <option value="hi">Hindi</option>
+              <option value="ar">Arabic</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Genre Multi-Select -->
+        <div class="filter-section" style="margin-bottom: 35px;">
+          <label style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">
+            Genres
+            <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: 400; margin-left: 10px;">(Select multiple)</span>
+          </label>
+          <div id="genreContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px;">
+            <!-- Genres will be populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Actor and Director Inputs -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 35px;">
+          
+          <!-- Actor Name -->
+          <div class="filter-section">
+            <label for="actorName" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Actor Name</label>
+            <input type="text" id="actorName" placeholder="e.g., Tom Hanks" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+            <div id="actorSuggestions" class="search-suggestions" style="display: none; position: absolute; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 5px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"></div>
+          </div>
+
+          <!-- Director Name -->
+          <div class="filter-section">
+            <label for="directorName" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Director Name</label>
+            <input type="text" id="directorName" placeholder="e.g., Steven Spielberg" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+            <div id="directorSuggestions" class="search-suggestions" style="display: none; position: absolute; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 5px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"></div>
+          </div>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 40px;">
+          <button type="submit" style="padding: 15px 50px; font-size: 1.1rem; font-weight: 600; background: var(--accent-primary); color: #000; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(163, 252, 19, 0.3);">
+            Search
+          </button>
+          <button type="button" id="resetBtn" style="padding: 15px 40px; font-size: 1.1rem; font-weight: 600; background: transparent; color: var(--text-primary); border: 2px solid var(--text-dim); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+            Reset
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 style="font-size: 2rem; color: var(--accent-primary);">Search Results</h2>
+        <span id="resultCount" style="color: var(--text-dim); font-size: 1.1rem;"></span>
+      </div>
+      
+      <div id="resultsGrid" class="movie-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px;">
+        <!-- Results will be populated here -->
+      </div>
+
+      <!-- Load More Button -->
+      <div style="text-align: center; margin-top: 40px;">
+        <button id="loadMoreBtn" style="display: none; padding: 12px 40px; font-size: 1rem; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+          Load More
+        </button>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div id="noResults" style="display: none; text-align: center; padding: 60px 20px; color: var(--text-dim);">
+      <p style="font-size: 1.3rem; margin-bottom: 10px;">No results found</p>
+      <p style="font-size: 1rem;">Try adjusting your search criteria</p>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" style="display: none; text-align: center; padding: 60px 20px;">
+      <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid rgba(163, 252, 19, 0.2); border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      <p style="color: var(--text-dim); margin-top: 20px; font-size: 1.1rem;">Searching...</p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <p>&copy; 2024 www.fossbox.cc. All rights reserved.</p>
+    <p>Powered by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">The Movie Database (TMDb)</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/app.js"></script>
+  
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .genre-checkbox {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      background: var(--bg-primary);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+    }
+
+    .genre-checkbox:hover {
+      border-color: var(--accent-primary);
+      background: rgba(163, 252, 19, 0.05);
+    }
+
+    .genre-checkbox.selected {
+      background: rgba(163, 252, 19, 0.15);
+      border-color: var(--accent-primary);
+    }
+
+    .genre-checkbox input[type="checkbox"] {
+      margin-right: 10px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+
+    .genre-checkbox label {
+      cursor: pointer;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+
+    .search-suggestions {
+      width: 100%;
+    }
+
+    .suggestion-item {
+      padding: 12px 15px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s;
+    }
+
+    .suggestion-item:hover {
+      background: rgba(163, 252, 19, 0.1);
+    }
+
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+  </style>
+
+  <script>
+    // TMDB API Configuration
+    const API_KEY = window.CONFIG?.TMDB_API_KEY || '';
+    const API_BASE = 'https://api.themoviedb.org/3';
+    
+    let currentPage = 1;
+    let totalPages = 1;
+    let currentResults = [];
+    let selectedGenres = [];
+    let movieGenres = [];
+    let tvGenres = [];
+    let selectedActorId = null;
+    let selectedDirectorId = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async function() {
+      await loadGenres();
+      setupEventListeners();
+    });
+
+    // Load genres from TMDB
+    async function loadGenres() {
+      try {
+        const [movieResponse, tvResponse] = await Promise.all([
+          fetch(`${API_BASE}/genre/movie/list?api_key=${API_KEY}`),
+          fetch(`${API_BASE}/genre/tv/list?api_key=${API_KEY}`)
+        ]);
+        
+        const movieData = await movieResponse.json();
+        const tvData = await tvResponse.json();
+        
+        movieGenres = movieData.genres || [];
+        tvGenres = tvData.genres || [];
+        
+        renderGenres('movie');
+      } catch (error) {
+        console.error('Error loading genres:', error);
+      }
+    }
+
+    // Render genre checkboxes
+    function renderGenres(type) {
+      const genres = type === 'movie' ? movieGenres : tvGenres;
+      const container = document.getElementById('genreContainer');
+      
+      container.innerHTML = genres.map(genre => `
+        <div class="genre-checkbox" data-genre-id="${genre.id}">
+          <input type="checkbox" id="genre-${genre.id}" value="${genre.id}">
+          <label for="genre-${genre.id}">${genre.name}</label>
+        </div>
+      `).join('');
+      
+      // Add click handlers
+      document.querySelectorAll('.genre-checkbox').forEach(box => {
+        box.addEventListener('click', function(e) {
+          if (e.target.tagName !== 'INPUT') {
+            const checkbox = this.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+          }
+          this.classList.toggle('selected', this.querySelector('input').checked);
+          updateSelectedGenres();
+        });
+      });
+    }
+
+    // Update selected genres
+    function updateSelectedGenres() {
+      selectedGenres = Array.from(document.querySelectorAll('#genreContainer input:checked'))
+        .map(input => input.value);
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Content type change
+      document.querySelectorAll('input[name="contentType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          renderGenres(this.value);
+          selectedGenres = [];
+        });
+      });
+
+      // Form submission
+      document.getElementById('advancedSearchForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        currentPage = 1;
+        await performSearch();
+      });
+
+      // Reset button
+      document.getElementById('resetBtn').addEventListener('click', function() {
+        document.getElementById('advancedSearchForm').reset();
+        document.querySelectorAll('.genre-checkbox').forEach(box => {
+          box.classList.remove('selected');
+        });
+        selectedGenres = [];
+        selectedActorId = null;
+        selectedDirectorId = null;
+        document.getElementById('resultsSection').style.display = 'none';
+        document.getElementById('noResults').style.display = 'none';
+        renderGenres('movie');
+      });
+
+      // Load more button
+      document.getElementById('loadMoreBtn').addEventListener('click', async function() {
+        if (currentPage < totalPages) {
+          currentPage++;
+          await performSearch(true);
+        }
+      });
+
+      // Actor/Director search with debounce
+      let actorTimeout, directorTimeout;
+      
+      document.getElementById('actorName').addEventListener('input', function(e) {
+        clearTimeout(actorTimeout);
+        const query = e.target.value.trim();
+        if (query.length > 2) {
+          actorTimeout = setTimeout(() => searchPerson(query, 'actor'), 300);
+        } else {
+          document.getElementById('actorSuggestions').style.display = 'none';
+        }
+      });
+
+      document.getElementById('directorName').addEventListener('input', function(e) {
+        clearTimeout(directorTimeout);
+        const query = e.target.value.trim();
+        if (query.length > 2) {
+          directorTimeout = setTimeout(() => searchPerson(query, 'director'), 300);
+        } else {
+          document.getElementById('directorSuggestions').style.display = 'none';
+        }
+      });
+    }
+
+    // Search for person (actor/director)
+    async function searchPerson(query, type) {
+      try {
+        const response = await fetch(`${API_BASE}/search/person?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        
+        const container = document.getElementById(type === 'actor' ? 'actorSuggestions' : 'directorSuggestions');
+        
+        if (data.results && data.results.length > 0) {
+          container.innerHTML = data.results.slice(0, 5).map(person => `
+            <div class="suggestion-item" data-person-id="${person.id}" data-person-name="${person.name}">
+              <strong>${person.name}</strong>
+              ${person.known_for_department ? `<span style="color: var(--text-dim); font-size: 0.85rem; margin-left: 8px;">${person.known_for_department}</span>` : ''}
+            </div>
+          `).join('');
+          
+          container.style.display = 'block';
+          
+          // Add click handlers
+          container.querySelectorAll('.suggestion-item').forEach(item => {
+            item.addEventListener('click', function() {
+              const personId = this.dataset.personId;
+              const personName = this.dataset.personName;
+              
+              if (type === 'actor') {
+                selectedActorId = personId;
+                document.getElementById('actorName').value = personName;
+                document.getElementById('actorSuggestions').style.display = 'none';
+              } else {
+                selectedDirectorId = personId;
+                document.getElementById('directorName').value = personName;
+                document.getElementById('directorSuggestions').style.display = 'none';
+              }
+            });
+          });
+        } else {
+          container.style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Error searching person:', error);
+      }
+    }
+
+    // Perform advanced search
+    async function performSearch(append = false) {
+      const contentType = document.querySelector('input[name="contentType"]:checked').value;
+      const listSelect = document.getElementById('listSelect').value;
+      const yearFrom = document.getElementById('yearFrom').value;
+      const yearTo = document.getElementById('yearTo').value;
+      const language = document.getElementById('language').value;
+      
+      // Show loading
+      document.getElementById('loadingIndicator').style.display = 'block';
+      document.getElementById('noResults').style.display = 'none';
+      
+      try {
+        let results = [];
+        
+        // If a list is selected, fetch from that list first
+        if (listSelect) {
+          results = await fetchFromList(listSelect, contentType);
+        } else {
+          // Use discover endpoint
+          results = await fetchDiscoverResults(contentType);
+        }
+        
+        // Apply filters
+        results = await applyFilters(results, contentType);
+        
+        // Display results
+        if (append) {
+          currentResults = [...currentResults, ...results];
+        } else {
+          currentResults = results;
+        }
+        
+        displayResults(currentResults);
+        
+      } catch (error) {
+        console.error('Search error:', error);
+        document.getElementById('noResults').style.display = 'block';
+      } finally {
+        document.getElementById('loadingIndicator').style.display = 'none';
+      }
+    }
+
+    // Fetch from specific list
+    async function fetchFromList(listType, contentType) {
+      let endpoint = '';
+      
+      switch(listType) {
+        case 'trending':
+          endpoint = `${API_BASE}/trending/${contentType}/week?api_key=${API_KEY}&page=${currentPage}`;
+          break;
+        case 'popular':
+          endpoint = `${API_BASE}/${contentType}/popular?api_key=${API_KEY}&page=${currentPage}`;
+          break;
+        case 'top_rated':
+          endpoint = `${API_BASE}/${contentType}/top_rated?api_key=${API_KEY}&page=${currentPage}`;
+          break;
+        case 'now_playing':
+          endpoint = `${API_BASE}/movie/now_playing?api_key=${API_KEY}&page=${currentPage}`;
+          break;
+        case 'upcoming':
+          endpoint = `${API_BASE}/movie/upcoming?api_key=${API_KEY}&page=${currentPage}`;
+          break;
+        case 'airing_today':
+          endpoint = `${API_BASE}/tv/airing_today?api_key=${API_KEY}&page=${currentPage}`;
+          break;
+        case 'on_the_air':
+          endpoint = `${API_BASE}/tv/on_the_air?api_key=${API_KEY}&page=${currentPage}`;
+          break;
+      }
+      
+      const response = await fetch(endpoint);
+      const data = await response.json();
+      totalPages = data.total_pages;
+      
+      return data.results || [];
+    }
+
+    // Fetch using discover endpoint
+    async function fetchDiscoverResults(contentType) {
+      const yearFrom = document.getElementById('yearFrom').value;
+      const yearTo = document.getElementById('yearTo').value;
+      const language = document.getElementById('language').value;
+      
+      let url = `${API_BASE}/discover/${contentType}?api_key=${API_KEY}&page=${currentPage}`;
+      
+      if (yearFrom) url += `&primary_release_date.gte=${yearFrom}-01-01`;
+      if (yearTo) url += `&primary_release_date.lte=${yearTo}-12-31`;
+      if (language) url += `&with_original_language=${language}`;
+      if (selectedGenres.length > 0) url += `&with_genres=${selectedGenres.join(',')}`;
+      if (selectedActorId) url += `&with_cast=${selectedActorId}`;
+      if (selectedDirectorId) url += `&with_crew=${selectedDirectorId}`;
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      totalPages = data.total_pages;
+      
+      return data.results || [];
+    }
+
+    // Apply additional filters
+    async function applyFilters(results, contentType) {
+      const yearFrom = document.getElementById('yearFrom').value;
+      const yearTo = document.getElementById('yearTo').value;
+      const language = document.getElementById('language').value;
+      
+      let filtered = results;
+      
+      // Year filter
+      if (yearFrom || yearTo) {
+        filtered = filtered.filter(item => {
+          const year = item.release_date ? parseInt(item.release_date.split('-')[0]) : 
+                       item.first_air_date ? parseInt(item.first_air_date.split('-')[0]) : null;
+          
+          if (!year) return false;
+          if (yearFrom && year < parseInt(yearFrom)) return false;
+          if (yearTo && year > parseInt(yearTo)) return false;
+          return true;
+        });
+      }
+      
+      // Genre filter (when fetching from list)
+      if (selectedGenres.length > 0) {
+        filtered = filtered.filter(item => {
+          if (!item.genre_ids) return false;
+          return selectedGenres.some(genreId => item.genre_ids.includes(parseInt(genreId)));
+        });
+      }
+      
+      // Actor/Director filter (when fetching from list) - requires additional API call
+      if ((selectedActorId || selectedDirectorId) && document.getElementById('listSelect').value) {
+        const detailedResults = await Promise.all(
+          filtered.map(item => fetchCredits(item.id, contentType))
+        );
+        
+        filtered = filtered.filter((item, index) => {
+          const credits = detailedResults[index];
+          if (!credits) return false;
+          
+          if (selectedActorId) {
+            const hasActor = credits.cast?.some(person => person.id == selectedActorId);
+            if (!hasActor) return false;
+          }
+          
+          if (selectedDirectorId) {
+            const hasDirector = credits.crew?.some(person => 
+              person.id == selectedDirectorId && person.job === 'Director'
+            );
+            if (!hasDirector) return false;
+          }
+          
+          return true;
+        });
+      }
+      
+      return filtered;
+    }
+
+    // Fetch credits for a specific item
+    async function fetchCredits(id, contentType) {
+      try {
+        const response = await fetch(`${API_BASE}/${contentType}/${id}/credits?api_key=${API_KEY}`);
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching credits:', error);
+        return null;
+      }
+    }
+
+    // Display results
+    function displayResults(results) {
+      const resultsSection = document.getElementById('resultsSection');
+      const resultsGrid = document.getElementById('resultsGrid');
+      const resultCount = document.getElementById('resultCount');
+      const noResults = document.getElementById('noResults');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      
+      if (results.length === 0) {
+        resultsSection.style.display = 'none';
+        noResults.style.display = 'block';
+        return;
+      }
+      
+      resultsSection.style.display = 'block';
+      noResults.style.display = 'none';
+      resultCount.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} found`;
+      
+      const contentType = document.querySelector('input[name="contentType"]:checked').value;
+      
+      resultsGrid.innerHTML = results.map(item => {
+        const title = item.title || item.name;
+        const year = item.release_date ? item.release_date.split('-')[0] : 
+                     item.first_air_date ? item.first_air_date.split('-')[0] : 'N/A';
+        const poster = item.poster_path ? 
+          `https://image.tmdb.org/t/p/w500${item.poster_path}` : 
+          'assets/placeholder-poster.png';
+        const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+        
+        return `
+          <div class="movie-item" style="cursor: pointer;" onclick="window.location.href='player.html?id=${item.id}&type=${contentType}'">
+            <img src="${poster}" alt="${title}" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+            <h4 style="font-size: 1rem; margin-bottom: 5px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${title}</h4>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-dim);">
+              <span>${year}</span>
+              <span style="color: var(--accent-primary);">⭐ ${rating}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Show/hide load more button
+      loadMoreBtn.style.display = currentPage < totalPages ? 'block' : 'none';
+    }
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#actorName') && !e.target.closest('#actorSuggestions')) {
+        document.getElementById('actorSuggestions').style.display = 'none';
+      }
+      if (!e.target.closest('#directorName') && !e.target.closest('#directorSuggestions')) {
+        document.getElementById('directorSuggestions').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

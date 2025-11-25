@@ -133,37 +133,9 @@
   <!-- Scripts -->
   <script src="assets/js/app.js"></script>
   
-  <!-- Mobile Navigation & Section Toggle Script -->
+  <!-- Section Toggle Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const mobileNavToggle = document.getElementById('mobileNavToggle');
-      const mobileNavMenu = document.getElementById('mobileNavMenu');
-      const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-      const mobileNavClose = document.getElementById('mobileNavClose');
-      
-      function openMobileNav() {
-        mobileNavMenu.classList.add('active');
-        mobileNavOverlay.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-      }
-      
-      function closeMobileNav() {
-        mobileNavMenu.classList.remove('active');
-        mobileNavOverlay.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-      
-      mobileNavToggle?.addEventListener('click', openMobileNav);
-      mobileNavClose?.addEventListener('click', closeMobileNav);
-      mobileNavOverlay?.addEventListener('click', closeMobileNav);
-      
-      // Close on escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && mobileNavMenu.classList.contains('active')) {
-          closeMobileNav();
-        }
-      });
-
       // Section Toggle Logic
       const moviesBtn = document.getElementById('refresh-movies-btn');
       const tvBtn = document.getElementById('refresh-tv-btn');

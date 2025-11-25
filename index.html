@@ -123,6 +123,11 @@
         </section>
 
         <section class="top-box" id="box-featured-content">
+          <nav id="main-breadcrumb" class="breadcrumb" aria-label="Breadcrumb" style="padding: 12px 15px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9em;">
+            <a href="index.html" style="color: var(--accent-primary); text-decoration: none; transition: color 0.2s;">Home</a> 
+            <span style="color: var(--text-dim); margin: 0 8px;">›</span>
+            <span style="color: var(--text-primary); font-weight: 500;">Top Lists</span>
+          </nav>
           <a href="#" class="quick-box-title">Featured Content</a>
           <div class="top-links" id="links-featured-content">
             <p class="no-content">Loading...</p>
@@ -133,11 +138,6 @@
   </div>
 
   <main class="main-wrap">
-    <nav id="main-breadcrumb" class="breadcrumb" aria-label="Breadcrumb">
-      <a href="#">Home</a> <span>›</span>
-      <a href="#">Browse</a> <span>›</span>
-      <span>Top Lists</span>
-    </nav>
   </main>
 
   <!-- Footer -->
@@ -149,38 +149,9 @@
   <!-- Scripts -->
   <script src="assets/js/app.js"></script>
   
-  <!-- Mobile Navigation & Section Toggle Script -->
+  <!-- Section Toggle Script -->
   <script>
-    // Mobile Navigation
     document.addEventListener('DOMContentLoaded', function() {
-      const mobileNavToggle = document.getElementById('mobileNavToggle');
-      const mobileNavMenu = document.getElementById('mobileNavMenu');
-      const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-      const mobileNavClose = document.getElementById('mobileNavClose');
-      
-      function openMobileNav() {
-        mobileNavMenu.classList.add('active');
-        mobileNavOverlay.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-      }
-      
-      function closeMobileNav() {
-        mobileNavMenu.classList.remove('active');
-        mobileNavOverlay.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-      
-      mobileNavToggle?.addEventListener('click', openMobileNav);
-      mobileNavClose?.addEventListener('click', closeMobileNav);
-      mobileNavOverlay?.addEventListener('click', closeMobileNav);
-      
-      // Close on escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && mobileNavMenu.classList.contains('active')) {
-          closeMobileNav();
-        }
-      });
-      
       // Section Toggle for Mobile
       const sectionToggleButtons = document.querySelectorAll('.section-toggle-btn');
       const moviesSections = document.querySelectorAll('.movies-section');

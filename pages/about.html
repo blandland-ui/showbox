@@ -8,27 +8,6 @@
   <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
-  <!-- Mobile Navigation -->
-  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open navigation menu">
-    <img src="../assets/hamburger-icon.svg" alt="Menu">
-  </button>
-  
-  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
-  
-  <nav class="mobile-nav-menu" id="mobileNavMenu" role="navigation" aria-label="Mobile navigation">
-    <div class="mobile-nav-header">
-      <a href="../index.html" class="mobile-nav-logo">FossBOX</a>
-      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close navigation menu">✕</button>
-    </div>
-    <div class="mobile-nav-links">
-      <a href="../index.html">HOME</a>
-      <a href="movies.html">Movies</a>
-      <a href="tv.html">TV Shows</a>
-      <a href="cartoons.html">Cartoons/Anime</a>
-      <a href="about.html" class="active">About</a>
-    </div>
-  </nav>
-
   <!-- Header -->
   <header class="site-header" style="height: 200px; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)); position: relative; display: flex; align-items: center; justify-content: center;">
     <div class="logo" style="display: flex; align-items: center; position: absolute; left: 80px; top: 50%; transform: translateY(-50%); z-index: 10;">
@@ -108,37 +87,5 @@
   <script src="../assets/js/app.js"></script>
   
   <!-- Mobile Navigation Script -->
-  <script>
-    // Mobile Navigation
-    document.addEventListener('DOMContentLoaded', function() {
-      const mobileNavToggle = document.getElementById('mobileNavToggle');
-      const mobileNavMenu = document.getElementById('mobileNavMenu');
-      const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-      const mobileNavClose = document.getElementById('mobileNavClose');
-      
-      function openMobileNav() {
-        mobileNavMenu.classList.add('active');
-        mobileNavOverlay.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-      }
-      
-      function closeMobileNav() {
-        mobileNavMenu.classList.remove('active');
-        mobileNavOverlay.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-      
-      mobileNavToggle?.addEventListener('click', openMobileNav);
-      mobileNavClose?.addEventListener('click', closeMobileNav);
-      mobileNavOverlay?.addEventListener('click', closeMobileNav);
-      
-      // Close on escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && mobileNavMenu.classList.contains('active')) {
-          closeMobileNav();
-        }
-      });
-    });
-  </script>
 </body>
 </html>
