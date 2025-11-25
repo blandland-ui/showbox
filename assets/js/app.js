@@ -217,6 +217,7 @@ class FossBOX {
       : 'https://via.placeholder.com/200x300/333/fff?text=No+Image';
 
     const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : 'Unknown';
+    const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
 
     // Determine if it's a TV show or movie
     const isTV = movie.name || movie.first_air_date || movie.media_type === 'tv';
@@ -225,10 +226,9 @@ class FossBOX {
 
     movieDiv.innerHTML = `
       <img src="${posterUrl}" alt="${title}" loading="lazy">
-      <div class="movie-info">
-        <h4>${title}</h4>
-        <p class="movie-year">${releaseYear} • ${mediaType.toUpperCase()}</p>
-        <p class="movie-overview">${movie.overview ? movie.overview.substring(0, 150) + '...' : 'No description available.'}</p>
+      <div class="movie-info" style="padding: 8px; display: flex; flex-direction: column; gap: 4px; min-height: 60px;">
+        <h4 style="color: #A3FC13 !important; display: block !important; margin: 0 0 4px; font-size: 0.85rem; line-height: 1.3; visibility: visible !important; opacity: 1 !important;">${title} (${releaseYear})</h4>
+        <p class="movie-rating" style="color: #A3FC13 !important; font-size: 0.8rem !important; margin: 0 !important; display: block !important; visibility: visible !important; opacity: 1 !important;">⭐ ${rating} • ${mediaType.toUpperCase()}</p>
       </div>
     `;
 
@@ -718,9 +718,9 @@ class RandomContentManager {
 
     div.innerHTML = `
       <img src="${posterUrl}" alt="${title}" loading="lazy">
-      <div class="movie-info">
-        <h4>${title} (${releaseYear})</h4>
-        <p class="movie-rating" style="font-size: 0.85rem; margin: 4px 0;">⭐ ${rating}</p>
+      <div class="movie-info" style="padding: 8px; display: flex; flex-direction: column; gap: 4px; min-height: 60px;">
+        <h4 style="color: #A3FC13 !important; display: block !important; margin: 0 0 4px; font-size: 0.85rem; line-height: 1.3; visibility: visible !important; opacity: 1 !important;">${title} (${releaseYear})</h4>
+        <p class="movie-rating" style="color: #A3FC13 !important; font-size: 0.8rem !important; margin: 0 !important; display: block !important; visibility: visible !important; opacity: 1 !important;">⭐ ${rating}</p>
       </div>
     `;
 
