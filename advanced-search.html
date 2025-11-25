@@ -133,6 +133,13 @@
             </select>
           </div>
 
+          <!-- Minimum Rating -->
+          <div class="filter-section">
+            <label for="minRating" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Minimum Rating</label>
+            <input type="number" id="minRating" placeholder="0.0" min="0" max="10" step="0.1" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+            <span style="font-size: 0.85rem; color: var(--text-dim); margin-top: 5px; display: block;">TMDB rating (0-10)</span>
+          </div>
+
         </div>
 
         <!-- Genre Multi-Select -->
@@ -549,12 +556,14 @@
       const yearFrom = document.getElementById('yearFrom').value;
       const yearTo = document.getElementById('yearTo').value;
       const language = document.getElementById('language').value;
+      const minRating = document.getElementById('minRating').value;
       
       let url = `${API_BASE}/discover/${contentType}?api_key=${API_KEY}&page=${currentPage}`;
       
       if (yearFrom) url += `&primary_release_date.gte=${yearFrom}-01-01`;
       if (yearTo) url += `&primary_release_date.lte=${yearTo}-12-31`;
       if (language) url += `&with_original_language=${language}`;
+      if (minRating) url += `&vote_average.gte=${minRating}`;
       if (selectedGenres.length > 0) url += `&with_genres=${selectedGenres.join(',')}`;
       if (selectedActorId) url += `&with_cast=${selectedActorId}`;
       if (selectedDirectorId) url += `&with_crew=${selectedDirectorId}`;
@@ -571,6 +580,7 @@
       const yearFrom = document.getElementById('yearFrom').value;
       const yearTo = document.getElementById('yearTo').value;
       const language = document.getElementById('language').value;
+      const minRating = document.getElementById('minRating').value;
       
       let filtered = results;
       
@@ -584,6 +594,13 @@
           if (yearFrom && year < parseInt(yearFrom)) return false;
           if (yearTo && year > parseInt(yearTo)) return false;
           return true;
+        });
+      }
+      
+      // Rating filter
+      if (minRating) {
+        filtered = filtered.filter(item => {
+          return item.vote_average >= parseFloat(minRating);
         });
       }
       
