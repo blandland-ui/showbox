@@ -642,7 +642,7 @@ select:focus {
 
 .ad-cta {
   background: linear-gradient(135deg, #00bcd4, #0097a7);
-  color: #000;
+  color: #9b59b6;
   border: none;
   padding: 12px 24px;
   border-radius: 6px;
@@ -675,7 +675,7 @@ select:focus {
 
 #main-ad-banner .ad-label {
   background: #00bcd4;
-  color: #000;
+  color: #9b59b6;
   font-size: 0.7rem;
   font-weight: 700;
   padding: 4px 12px;
@@ -782,7 +782,7 @@ select:focus {
 
 #main-ad-banner .ad-cta.primary {
   background: linear-gradient(135deg, #00bcd4, #0097a7);
-  color: #000;
+  color: #9b59b6;
   padding: 16px 32px;
   font-size: 1.1rem;
   font-weight: 700;
