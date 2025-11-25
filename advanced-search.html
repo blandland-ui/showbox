@@ -172,6 +172,38 @@
 
         </div>
 
+        <!-- Text Query Search -->
+        <div class="filter-section" style="margin-bottom: 35px; padding: 25px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+          <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+            <label style="font-size: 1.2rem; font-weight: 600; color: var(--accent-primary);">
+              Enable Text Query Search
+            </label>
+            <div style="display: flex; gap: 20px;">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="radio" name="textQueryEnabled" value="off" checked style="margin-right: 8px; cursor: pointer;">
+                <span style="font-size: 1rem;">Off</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="radio" name="textQueryEnabled" value="on" style="margin-right: 8px; cursor: pointer;">
+                <span style="font-size: 1rem;">On</span>
+              </label>
+            </div>
+          </div>
+          
+          <div id="textQuerySection" style="opacity: 0.4; pointer-events: none; transition: all 0.3s;">
+            <label for="textQuery" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">
+              Search Query
+              <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: 400; margin-left: 10px;">
+                (Search for text in titles, overviews, cast, crew, etc.)
+              </span>
+            </label>
+            <input type="text" id="textQuery" placeholder="e.g., tom cruise, space adventure, zombie apocalypse..." disabled style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+            <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 8px;">
+              💡 This will search for your text in all metadata fields including actor names, director names, movie titles, descriptions, and more.
+            </p>
+          </div>
+        </div>
+
         <!-- Action Buttons -->
         <div style="display: flex; gap: 15px; justify-content: center; margin-top: 40px;">
           <button type="submit" style="padding: 15px 50px; font-size: 1.1rem; font-weight: 600; background: var(--accent-primary); color: #000; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(163, 252, 19, 0.3);">
@@ -396,6 +428,48 @@
         document.getElementById('resultsSection').style.display = 'none';
         document.getElementById('noResults').style.display = 'none';
         renderGenres('movie');
+        // Reset text query section
+        document.getElementById('textQuerySection').style.opacity = '0.4';
+        document.getElementById('textQuerySection').style.pointerEvents = 'none';
+        document.getElementById('textQuery').disabled = true;
+      });
+
+      // Text query toggle
+      document.querySelectorAll('input[name="textQueryEnabled"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const textQuerySection = document.getElementById('textQuerySection');
+          const textQueryInput = document.getElementById('textQuery');
+          
+          if (this.value === 'on') {
+            textQuerySection.style.opacity = '1';
+            textQuerySection.style.pointerEvents = 'auto';
+            textQueryInput.disabled = false;
+            textQueryInput.focus();
+          } else {
+            textQuerySection.style.opacity = '0.4';
+            textQuerySection.style.pointerEvents = 'none';
+            textQueryInput.disabled = true;
+            textQueryInput.value = '';
+          }
+        });
+      });
+
+      // Form validation
+      document.getElementById('advancedSearchForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Check if text query is enabled and empty
+        const textQueryEnabled = document.querySelector('input[name="textQueryEnabled"]:checked').value === 'on';
+        const textQuery = document.getElementById('textQuery').value.trim();
+        
+        if (textQueryEnabled && !textQuery) {
+          alert('Please enter a search query or disable text query search.');
+          document.getElementById('textQuery').focus();
+          return;
+        }
+        
+        currentPage = 1;
+        await performSearch();
       });
 
       // Load more button
@@ -581,6 +655,8 @@
       const yearTo = document.getElementById('yearTo').value;
       const language = document.getElementById('language').value;
       const minRating = document.getElementById('minRating').value;
+      const textQueryEnabled = document.querySelector('input[name="textQueryEnabled"]:checked').value === 'on';
+      const textQuery = document.getElementById('textQuery').value.trim().toLowerCase();
       
       let filtered = results;
       
@@ -609,6 +685,59 @@
         filtered = filtered.filter(item => {
           if (!item.genre_ids) return false;
           return selectedGenres.some(genreId => item.genre_ids.includes(parseInt(genreId)));
+        });
+      }
+      
+      // Text query filter - searches all metadata
+      if (textQueryEnabled && textQuery) {
+        // Fetch detailed information for each item to search through all metadata
+        const detailedResults = await Promise.all(
+          filtered.map(item => fetchDetailedInfo(item.id, contentType))
+        );
+        
+        filtered = filtered.filter((item, index) => {
+          const details = detailedResults[index];
+          if (!details) return false;
+          
+          // Search in title/name
+          const title = (item.title || item.name || '').toLowerCase();
+          if (title.includes(textQuery)) return true;
+          
+          // Search in overview
+          const overview = (item.overview || '').toLowerCase();
+          if (overview.includes(textQuery)) return true;
+          
+          // Search in tagline
+          if (details.tagline && details.tagline.toLowerCase().includes(textQuery)) return true;
+          
+          // Search in cast names
+          if (details.credits?.cast) {
+            const castMatch = details.credits.cast.some(person => 
+              person.name.toLowerCase().includes(textQuery) || 
+              (person.character && person.character.toLowerCase().includes(textQuery))
+            );
+            if (castMatch) return true;
+          }
+          
+          // Search in crew names (directors, writers, etc.)
+          if (details.credits?.crew) {
+            const crewMatch = details.credits.crew.some(person => 
+              person.name.toLowerCase().includes(textQuery) ||
+              (person.job && person.job.toLowerCase().includes(textQuery))
+            );
+            if (crewMatch) return true;
+          }
+          
+          // Search in keywords
+          if (details.keywords) {
+            const keywordList = details.keywords.keywords || details.keywords.results || [];
+            const keywordMatch = keywordList.some(kw => 
+              kw.name.toLowerCase().includes(textQuery)
+            );
+            if (keywordMatch) return true;
+          }
+          
+          return false;
         });
       }
       
@@ -648,6 +777,17 @@
         return await response.json();
       } catch (error) {
         console.error('Error fetching credits:', error);
+        return null;
+      }
+    }
+
+    // Fetch detailed information for text query search
+    async function fetchDetailedInfo(id, contentType) {
+      try {
+        const response = await fetch(`${API_BASE}/${contentType}/${id}?api_key=${API_KEY}&append_to_response=credits,keywords`);
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching detailed info:', error);
         return null;
       }
     }
