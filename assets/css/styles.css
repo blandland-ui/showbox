@@ -144,18 +144,20 @@ img {
 .search-form a {
   padding: 8px 12px;
   font-size: 0.75rem;
-  color: var(--accent-primary);
+  color: #fe531e;
   text-decoration: none;
   text-align: center;
   line-height: 1.2;
   white-space: nowrap;
   transition: all 0.2s ease;
   border-right: 1px solid var(--border-color);
+  flex-shrink: 0;
+  display: block;
 }
 
 .search-form a:hover {
-  background: rgba(163, 252, 19, 0.1);
-  color: var(--accent-hover);
+  background: rgba(254, 83, 30, 0.2);
+  color: #ff6b3d;
 }
 
 .search-btn {
