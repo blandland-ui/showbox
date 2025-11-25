@@ -56,7 +56,7 @@
 
     <!-- Page Title -->
     <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: #fe531e !important; padding: 15px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">Advanced Search</h1><br />
-    <p style="color: #A3FC13 !important; margin-bottom: 40px; font-size: 1.1rem; padding: 12px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">Filter movies and TV shows using multiple criteria</p>
+    <p style="color: #fe531e !important; margin-bottom: 40px; font-size: 1.1rem; padding: 12px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">Filter movies and TV shows using multiple criteria</p>
 
     <!-- Advanced Search Form -->
     <div class="advanced-search-container" style="background: var(--bg-secondary); padding: 40px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin-bottom: 40px;">
@@ -64,7 +64,7 @@
         
         <!-- Content Type Selection -->
         <div class="filter-section" style="margin-bottom: 35px;">
-          <label style="display: block; font-size: 1.2rem; font-weight: 600; color: var(--accent-primary); margin-bottom: 15px;">Content Type</label>
+          <label style="display: block; font-size: 1.2rem; font-weight: 600; color: #fe531e; margin-bottom: 15px;">Content Type</label>
           <div style="display: flex; gap: 20px;">
             <label style="display: flex; align-items: center; cursor: pointer;">
               <input type="radio" name="contentType" value="movie" checked style="margin-right: 8px; cursor: pointer;">
@@ -79,7 +79,7 @@
 
         <!-- List Selection -->
         <div class="filter-section" style="margin-bottom: 35px;">
-          <label for="listSelect" style="display: block; font-size: 1.2rem; font-weight: 600; color: var(--accent-primary); margin-bottom: 15px;">
+          <label for="listSelect" style="display: block; font-size: 1.2rem; font-weight: 600; color: #fe531e; margin-bottom: 15px;">
             Filter from Specific List
             <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: 400; margin-left: 10px;">(Optional - Leave blank to search all content)</span>
           </label>
@@ -100,7 +100,7 @@
           
           <!-- Year Range -->
           <div class="filter-section">
-            <label style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Year</label>
+            <label style="display: block; font-size: 1.1rem; font-weight: 600; color: #fe531e; margin-bottom: 12px;">Year</label>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
               <div>
                 <label for="yearFrom" style="font-size: 0.85rem; color: var(--text-dim); display: block; margin-bottom: 5px;">From</label>
@@ -115,7 +115,7 @@
 
           <!-- Language -->
           <div class="filter-section">
-            <label for="language" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Language</label>
+            <label for="language" style="display: block; font-size: 1.1rem; font-weight: 600; color: #fe531e; margin-bottom: 12px;">Language</label>
             <select id="language" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; cursor: pointer;">
               <option value="">Any Language</option>
               <option value="en">English</option>
@@ -135,7 +135,7 @@
 
           <!-- Minimum Rating -->
           <div class="filter-section">
-            <label for="minRating" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Minimum Rating</label>
+            <label for="minRating" style="display: block; font-size: 1.1rem; font-weight: 600; color: #fe531e; margin-bottom: 12px;">Minimum Rating</label>
             <input type="number" id="minRating" placeholder="0.0" min="0" max="10" step="0.1" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
             <span style="font-size: 0.85rem; color: var(--text-dim); margin-top: 5px; display: block;">TMDB rating (0-10)</span>
           </div>
@@ -144,7 +144,7 @@
 
         <!-- Genre Multi-Select -->
         <div class="filter-section" style="margin-bottom: 35px;">
-          <label style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">
+          <label style="display: block; font-size: 1.1rem; font-weight: 600; color: #fe531e; margin-bottom: 12px;">
             Genres
             <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: 400; margin-left: 10px;">(Select multiple)</span>
           </label>
@@ -158,14 +158,14 @@
           
           <!-- Actor Name -->
           <div class="filter-section">
-            <label for="actorName" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Actor Name</label>
+            <label for="actorName" style="display: block; font-size: 1.1rem; font-weight: 600; color: #fe531e; margin-bottom: 12px;">Actor Name</label>
             <input type="text" id="actorName" placeholder="e.g., Tom Hanks" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
             <div id="actorSuggestions" class="search-suggestions" style="display: none; position: absolute; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 5px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"></div>
           </div>
 
           <!-- Director Name -->
           <div class="filter-section">
-            <label for="directorName" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Director Name</label>
+            <label for="directorName" style="display: block; font-size: 1.1rem; font-weight: 600; color: #fe531e; margin-bottom: 12px;">Director Name</label>
             <input type="text" id="directorName" placeholder="e.g., Steven Spielberg" style="width: 100%; padding: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
             <div id="directorSuggestions" class="search-suggestions" style="display: none; position: absolute; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 5px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.4);"></div>
           </div>
@@ -175,7 +175,7 @@
         <!-- Text Query Search -->
         <div class="filter-section" style="margin-bottom: 35px; padding: 25px; background: rgba(255,255,255,0.03); border-radius: 10px;">
           <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-            <label style="font-size: 1.2rem; font-weight: 600; color: var(--accent-primary);">
+            <label style="font-size: 1.2rem; font-weight: 600; color: #fe531e;">
               Enable Text Query Search
             </label>
             <div style="display: flex; gap: 20px;">
@@ -191,7 +191,7 @@
           </div>
           
           <div id="textQuerySection" style="opacity: 0.4; pointer-events: none; transition: all 0.3s;">
-            <label for="textQuery" style="display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">
+            <label for="textQuery" style="display: block; font-size: 1.1rem; font-weight: 600; color: #fe531e; margin-bottom: 12px;">
               Search Query
               <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: 400; margin-left: 10px;">
                 (Search for text in titles, overviews, cast, crew, etc.)
