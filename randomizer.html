@@ -117,6 +117,11 @@
         .random-section.active {
           display: block;
         }
+        /* Override any min-height on grids */
+        #random-movies-grid,
+        #random-tv-grid {
+          min-height: 0 !important;
+        }
       </style>
       
       <!-- Random Movies -->
@@ -124,7 +129,7 @@
         <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
           🎬 Random Movies
         </h3>
-        <div class="movie-list" id="random-movies-grid" style="min-height: 400px;">
+        <div class="movie-list" id="random-movies-grid">
         </div>
       </div>
 
@@ -133,7 +138,7 @@
         <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
           📺 Random TV Shows
         </h3>
-        <div class="movie-list" id="random-tv-grid" style="min-height: 400px;">
+        <div class="movie-list" id="random-tv-grid">
         </div>
       </div>
     </div>
