@@ -445,7 +445,7 @@ select:focus {
 
 .quick-box-title {
   display: block;
-  color: var(--text-primary);
+  color: var(--accent-primary);
   font-weight: 700;
   margin-bottom: var(--spacing-xs);
   text-decoration: none;
