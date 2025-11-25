@@ -87,10 +87,9 @@
       </button>
     </div>
     
-    <div class="random-content-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
+    <div class="random-content-container" style="max-width: 1200px; margin: 0 auto;">
       <style>
         @media (max-width: 768px) {
-          .random-content-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
           .random-content-section h2 { font-size: 2rem !important; }
           .random-section h3 { font-size: 1.4rem !important; }
           .random-controls { gap: 10px !important; }
@@ -100,23 +99,33 @@
           background: #0097a7 !important;
           transform: translateY(-2px);
         }
+        .random-controls button.active {
+          background: #0097a7 !important;
+          box-shadow: 0 4px 12px rgba(0, 188, 212, 0.5);
+        }
+        .random-section {
+          display: none;
+        }
+        .random-section.active {
+          display: block;
+        }
       </style>
       
       <!-- Random Movies -->
-      <div class="random-section">
+      <div class="random-section" id="movies-section">
         <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
           🎬 Random Movies
         </h3>
-        <div class="movie-list" id="random-movies-grid" style="min-height: 400px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
+        <div class="movie-list" id="random-movies-grid" style="min-height: 400px;">
         </div>
       </div>
 
       <!-- Random TV Shows -->
-      <div class="random-section">
+      <div class="random-section" id="tv-section">
         <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
           📺 Random TV Shows
         </h3>
-        <div class="movie-list" id="random-tv-grid" style="min-height: 400px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
+        <div class="movie-list" id="random-tv-grid" style="min-height: 400px;">
         </div>
       </div>
     </div>
@@ -131,7 +140,7 @@
   <!-- Scripts -->
   <script src="assets/js/app.js"></script>
   
-  <!-- Mobile Navigation Script -->
+  <!-- Mobile Navigation & Section Toggle Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const mobileNavToggle = document.getElementById('mobileNavToggle');
@@ -161,6 +170,42 @@
           closeMobileNav();
         }
       });
+
+      // Section Toggle Logic
+      const moviesBtn = document.getElementById('refresh-movies-btn');
+      const tvBtn = document.getElementById('refresh-tv-btn');
+      const moviesSection = document.getElementById('movies-section');
+      const tvSection = document.getElementById('tv-section');
+
+      function showMovies() {
+        moviesSection.classList.add('active');
+        tvSection.classList.remove('active');
+        moviesBtn.classList.add('active');
+        tvBtn.classList.remove('active');
+        
+        // Trigger the movie refresh
+        if (window.app && window.app.loadRandomMovies) {
+          window.app.loadRandomMovies();
+        }
+      }
+
+      function showTV() {
+        tvSection.classList.add('active');
+        moviesSection.classList.remove('active');
+        tvBtn.classList.add('active');
+        moviesBtn.classList.remove('active');
+        
+        // Trigger the TV refresh
+        if (window.app && window.app.loadRandomTV) {
+          window.app.loadRandomTV();
+        }
+      }
+
+      moviesBtn?.addEventListener('click', showMovies);
+      tvBtn?.addEventListener('click', showTV);
+
+      // Show movies by default on load
+      showMovies();
     });
   </script>
 </body>
