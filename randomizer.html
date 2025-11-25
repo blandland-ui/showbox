@@ -77,13 +77,16 @@
       🎲 Discover Something New
     </h2>
 
-    <!-- Control Buttons -->
+    <!-- Control Buttons (Top) -->
     <div class="random-controls" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;">
-      <button id="refresh-movies-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
+      <button id="refresh-movies-btn" class="category-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
         🎬 New Movies
       </button>
-      <button id="refresh-tv-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
+      <button id="refresh-tv-btn" class="category-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
         📺 New TV Shows
+      </button>
+      <button id="randomize-btn-top" class="randomize-btn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);">
+        🎲 Randomize
       </button>
     </div>
     
@@ -102,6 +105,11 @@
         .random-controls button.active {
           background: #0097a7 !important;
           box-shadow: 0 4px 12px rgba(0, 188, 212, 0.5);
+        }
+        .randomize-btn:hover {
+          background: linear-gradient(135deg, #ee5a6f, #ff6b6b) !important;
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4) !important;
         }
         .random-section {
           display: none;
@@ -128,6 +136,19 @@
         <div class="movie-list" id="random-tv-grid" style="min-height: 400px;">
         </div>
       </div>
+    </div>
+
+    <!-- Control Buttons (Bottom) -->
+    <div class="random-controls" style="display: flex; justify-content: center; gap: 15px; margin-top: 40px; flex-wrap: wrap;">
+      <button id="refresh-movies-btn-bottom" class="category-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
+        🎬 New Movies
+      </button>
+      <button id="refresh-tv-btn-bottom" class="category-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
+        📺 New TV Shows
+      </button>
+      <button id="randomize-btn-bottom" class="randomize-btn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);">
+        🎲 Randomize
+      </button>
     </div>
   </section>
 
@@ -174,14 +195,28 @@
       // Section Toggle Logic
       const moviesBtn = document.getElementById('refresh-movies-btn');
       const tvBtn = document.getElementById('refresh-tv-btn');
+      const moviesBtnBottom = document.getElementById('refresh-movies-btn-bottom');
+      const tvBtnBottom = document.getElementById('refresh-tv-btn-bottom');
+      const randomizeBtnTop = document.getElementById('randomize-btn-top');
+      const randomizeBtnBottom = document.getElementById('randomize-btn-bottom');
       const moviesSection = document.getElementById('movies-section');
       const tvSection = document.getElementById('tv-section');
+      
+      let currentCategory = 'movies'; // Track current category
 
       function showMovies() {
+        currentCategory = 'movies';
         moviesSection.classList.add('active');
         tvSection.classList.remove('active');
-        moviesBtn.classList.add('active');
-        tvBtn.classList.remove('active');
+        
+        // Update all category buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+          if (btn.id.includes('movies')) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
         
         // Trigger the movie refresh
         if (window.app && window.app.loadRandomMovies) {
@@ -190,19 +225,45 @@
       }
 
       function showTV() {
+        currentCategory = 'tv';
         tvSection.classList.add('active');
         moviesSection.classList.remove('active');
-        tvBtn.classList.add('active');
-        moviesBtn.classList.remove('active');
+        
+        // Update all category buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+          if (btn.id.includes('tv')) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
         
         // Trigger the TV refresh
         if (window.app && window.app.loadRandomTV) {
           window.app.loadRandomTV();
         }
       }
+      
+      function randomize() {
+        // Refresh the current category
+        if (currentCategory === 'movies') {
+          if (window.app && window.app.loadRandomMovies) {
+            window.app.loadRandomMovies();
+          }
+        } else {
+          if (window.app && window.app.loadRandomTV) {
+            window.app.loadRandomTV();
+          }
+        }
+      }
 
+      // Add event listeners to all buttons
       moviesBtn?.addEventListener('click', showMovies);
       tvBtn?.addEventListener('click', showTV);
+      moviesBtnBottom?.addEventListener('click', showMovies);
+      tvBtnBottom?.addEventListener('click', showTV);
+      randomizeBtnTop?.addEventListener('click', randomize);
+      randomizeBtnBottom?.addEventListener('click', randomize);
 
       // Show movies by default on load
       showMovies();

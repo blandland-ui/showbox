@@ -253,17 +253,34 @@
             throw new Error('API key not configured');
           }
 
-          const response = await fetch(
+          // Fetch 2 pages to get 35+ items for 7x5 grid
+          const page1Response = await fetch(
             `https://api.themoviedb.org/3/movie/${this.currentCategory}?api_key=${API_KEY}&language=en-US&page=${this.currentPage}`
           );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+          
+          if (!page1Response.ok) {
+            throw new Error(`HTTP error! status: ${page1Response.status}`);
           }
 
-          const data = await response.json();
-          this.totalPages = Math.min(data.total_pages, 20); // Limit to 20 pages for performance
-          this.displayMovies(data.results, true); // Always clear grid for pagination
+          const page1Data = await page1Response.json();
+          let allResults = page1Data.results;
+          
+          // If we need more items to reach 35, fetch next page
+          if (allResults.length < 35 && page1Data.total_pages > this.currentPage) {
+            const page2Response = await fetch(
+              `https://api.themoviedb.org/3/movie/${this.currentCategory}?api_key=${API_KEY}&language=en-US&page=${this.currentPage + 1}`
+            );
+            if (page2Response.ok) {
+              const page2Data = await page2Response.json();
+              allResults = [...allResults, ...page2Data.results];
+            }
+          }
+          
+          // Take exactly 35 items for 7x5 grid
+          const displayResults = allResults.slice(0, 35);
+          
+          this.totalPages = Math.min(page1Data.total_pages, 20); // Limit to 20 pages for performance
+          this.displayMovies(displayResults, true); // Always clear grid for pagination
           this.updatePagination();
           
           // Show pagination if there are multiple pages

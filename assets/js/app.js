@@ -592,8 +592,8 @@ class RandomContentManager {
 
       const data = await response.json();
       
-      // Shuffle and take 12 random movies for better grid filling
-      const shuffledMovies = this.shuffleArray(data.results).slice(0, 12);
+      // Shuffle and take 35 random movies for 7x5 grid
+      const shuffledMovies = this.shuffleArray(data.results).slice(0, 35);
       
       this.displayRandomContent(shuffledMovies, grid, 'movie');
 
@@ -633,8 +633,8 @@ class RandomContentManager {
 
       const data = await response.json();
       
-      // Shuffle and take 12 random TV shows for better grid filling
-      const shuffledShows = this.shuffleArray(data.results).slice(0, 12);
+      // Shuffle and take 35 random TV shows for 7x5 grid
+      const shuffledShows = this.shuffleArray(data.results).slice(0, 35);;
       
       this.displayRandomContent(shuffledShows, grid, 'tv');
 
