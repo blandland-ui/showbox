@@ -413,6 +413,8 @@
         const grid = document.getElementById('tv-shows-grid');
         const ad = document.getElementById('tv-shows-ad');
         
+        console.log('📺 displayTVShows called with', shows.length, 'shows');
+        
         if (clearGrid) {
           grid.innerHTML = '';
           // Re-add the ad space
@@ -437,6 +439,8 @@
           const showElement = this.createTVShowElement(show);
           grid.appendChild(showElement);
         });
+        
+        console.log('✅ Grid now has', grid.children.length, 'items');
       }
 
       createTVShowElement(show) {

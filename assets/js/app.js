@@ -645,6 +645,8 @@ class RandomContentManager {
   }
 
   displayRandomContent(items, grid, type) {
+    console.log(`🎲 displayRandomContent called with ${items.length} ${type} items`);
+    
     // Hide ads when content loads
     const adId = grid.id.replace('-grid', '-ad');
     const ad = document.getElementById(adId);
@@ -663,6 +665,8 @@ class RandomContentManager {
       const contentElement = this.createContentElement(item, type);
       grid.appendChild(contentElement);
     });
+    
+    console.log(`✅ Grid ${grid.id} now has ${grid.children.length} items`);
   }
 
   createContentElement(item, type) {
