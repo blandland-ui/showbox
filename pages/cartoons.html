@@ -483,9 +483,8 @@
             ${!isMovie ? '<div class="tv-indicator"></div>' : ''}
           </div>
           <div class="movie-info">
-            <h4>${title}</h4>
-            <p class="movie-year">${firstAirYear} • ⭐ ${rating}</p>
-            <p class="movie-overview">${item.overview ? item.overview.substring(0, 120) + '...' : 'No description available.'}</p>
+            <h4>${title} (${firstAirYear})</h4>
+            <p class="movie-rating" style="font-size: 0.85rem; margin: 4px 0;">⭐ ${rating}</p>
           </div>
         `;
 

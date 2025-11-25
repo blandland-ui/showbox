@@ -460,12 +460,11 @@
         showDiv.innerHTML = `
           <div class="movie-poster-container">
             <img src="${posterUrl}" alt="${show.name}" loading="lazy">
-            <div class="tv-indicator"></div>
+            <div class="tv-indicator" title="TV Show"></div>
           </div>
           <div class="movie-info">
-            <h4>${show.name}</h4>
-            <p class="movie-year">${firstAirYear} • ⭐ ${rating}</p>
-            <p class="movie-overview">${show.overview ? show.overview.substring(0, 120) + '...' : 'No description available.'}</p>
+            <h4>${show.name} (${firstAirYear})</h4>
+            <p class="movie-rating" style="font-size: 0.85rem; margin: 4px 0;">⭐ ${rating}</p>
           </div>
         `;
 

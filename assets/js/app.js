@@ -719,9 +719,8 @@ class RandomContentManager {
     div.innerHTML = `
       <img src="${posterUrl}" alt="${title}" loading="lazy">
       <div class="movie-info">
-        <h4>${title}</h4>
-        <p class="movie-year">${releaseYear} • ⭐ ${rating}</p>
-        <p class="movie-overview">${item.overview ? item.overview.substring(0, 80) + '...' : 'No description available.'}</p>
+        <h4>${title} (${releaseYear})</h4>
+        <p class="movie-rating" style="font-size: 0.85rem; margin: 4px 0;">⭐ ${rating}</p>
       </div>
     `;
 
