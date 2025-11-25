@@ -582,18 +582,34 @@ class RandomContentManager {
       const categories = ['popular', 'top_rated', 'now_playing'];
       const randomCategory = categories[Math.floor(Math.random() * categories.length)];
 
-      const response = await fetch(
+      // Fetch 2 pages to get 35+ items
+      const page1Response = await fetch(
         `https://api.themoviedb.org/3/movie/${randomCategory}?api_key=${API_KEY}&language=en-US&page=${randomPage}`
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!page1Response.ok) {
+        throw new Error(`HTTP error! status: ${page1Response.status}`);
       }
 
-      const data = await response.json();
+      const page1Data = await page1Response.json();
+      let allResults = page1Data.results;
+      
+      // Fetch next page to get more items
+      const page2Response = await fetch(
+        `https://api.themoviedb.org/3/movie/${randomCategory}?api_key=${API_KEY}&language=en-US&page=${randomPage + 1}`
+      );
+      
+      if (page2Response.ok) {
+        const page2Data = await page2Response.json();
+        allResults = [...allResults, ...page2Data.results];
+      }
+      
+      console.log('🎬 Random movies fetched:', allResults.length);
       
       // Shuffle and take 35 random movies for 7x5 grid
-      const shuffledMovies = this.shuffleArray(data.results).slice(0, 35);
+      const shuffledMovies = this.shuffleArray(allResults).slice(0, 35);
+      
+      console.log('🎬 Displaying:', shuffledMovies.length, 'movies');
       
       this.displayRandomContent(shuffledMovies, grid, 'movie');
 
@@ -623,18 +639,34 @@ class RandomContentManager {
       const categories = ['popular', 'top_rated', 'on_the_air'];
       const randomCategory = categories[Math.floor(Math.random() * categories.length)];
 
-      const response = await fetch(
+      // Fetch 2 pages to get 35+ items
+      const page1Response = await fetch(
         `https://api.themoviedb.org/3/tv/${randomCategory}?api_key=${API_KEY}&language=en-US&page=${randomPage}`
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!page1Response.ok) {
+        throw new Error(`HTTP error! status: ${page1Response.status}`);
       }
 
-      const data = await response.json();
+      const page1Data = await page1Response.json();
+      let allResults = page1Data.results;
+      
+      // Fetch next page to get more items
+      const page2Response = await fetch(
+        `https://api.themoviedb.org/3/tv/${randomCategory}?api_key=${API_KEY}&language=en-US&page=${randomPage + 1}`
+      );
+      
+      if (page2Response.ok) {
+        const page2Data = await page2Response.json();
+        allResults = [...allResults, ...page2Data.results];
+      }
+      
+      console.log('📺 Random TV shows fetched:', allResults.length);
       
       // Shuffle and take 35 random TV shows for 7x5 grid
-      const shuffledShows = this.shuffleArray(data.results).slice(0, 35);;
+      const shuffledShows = this.shuffleArray(allResults).slice(0, 35);
+      
+      console.log('📺 Displaying:', shuffledShows.length, 'shows');
       
       this.displayRandomContent(shuffledShows, grid, 'tv');
 
