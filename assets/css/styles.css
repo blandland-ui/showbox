@@ -921,11 +921,6 @@ select:focus {
   .top-lists {
     grid-template-columns: 1fr;
   }
-  
-  .movie-list {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--spacing-md);
-  }
 }
 
 @media (max-width: 480px) {
@@ -1110,11 +1105,6 @@ select:focus {
   
   .top-lists {
     grid-template-columns: 1fr;
-  }
-  
-  .movie-list {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--spacing-md);
   }
 }
 

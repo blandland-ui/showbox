@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Grid Test</title>
+    <style>
+        body {
+            background: #0d0d0d;
+            color: #fff;
+            font-family: Arial;
+            padding: 20px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(5, auto);
+            gap: 12px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .test-card {
+            background: #1b1b1b;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #A3FC13;
+        }
+    </style>
+</head>
+<body>
+    <h1>7x5 Grid Test (35 Cards)</h1>
+    <div class="test-grid">
+        <div class="test-card">1</div>
+        <div class="test-card">2</div>
+        <div class="test-card">3</div>
+        <div class="test-card">4</div>
+        <div class="test-card">5</div>
+        <div class="test-card">6</div>
+        <div class="test-card">7</div>
+        <div class="test-card">8</div>
+        <div class="test-card">9</div>
+        <div class="test-card">10</div>
+        <div class="test-card">11</div>
+        <div class="test-card">12</div>
+        <div class="test-card">13</div>
+        <div class="test-card">14</div>
+        <div class="test-card">15</div>
+        <div class="test-card">16</div>
+        <div class="test-card">17</div>
+        <div class="test-card">18</div>
+        <div class="test-card">19</div>
+        <div class="test-card">20</div>
+        <div class="test-card">21</div>
+        <div class="test-card">22</div>
+        <div class="test-card">23</div>
+        <div class="test-card">24</div>
+        <div class="test-card">25</div>
+        <div class="test-card">26</div>
+        <div class="test-card">27</div>
+        <div class="test-card">28</div>
+        <div class="test-card">29</div>
+        <div class="test-card">30</div>
+        <div class="test-card">31</div>
+        <div class="test-card">32</div>
+        <div class="test-card">33</div>
+        <div class="test-card">34</div>
+        <div class="test-card">35</div>
+    </div>
+    
+    <script>
+        // Test DevTools
+        console.log('%c✓ DevTools Working!', 'color: #0f0; font-size: 20px; font-weight: bold;');
+        console.log('If you can see this, the inspector is working.');
+        console.log('Press Ctrl+Shift+I or F12 - it should open DevTools without redirect.');
+    </script>
+</body>
+</html>
