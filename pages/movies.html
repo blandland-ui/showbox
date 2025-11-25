@@ -279,6 +279,10 @@
           // Take exactly 35 items for 7x5 grid
           const displayResults = allResults.slice(0, 35);
           
+          // DEBUG: Log what we're about to display
+          console.log('📊 Movies to display:', displayResults.length);
+          console.log('📦 Full results:', allResults.length);
+          
           this.totalPages = Math.min(page1Data.total_pages, 20); // Limit to 20 pages for performance
           this.displayMovies(displayResults, true); // Always clear grid for pagination
           this.updatePagination();
@@ -413,6 +417,9 @@
         const grid = document.getElementById('movies-grid');
         const ad = document.getElementById('movies-ad');
         
+        // DEBUG: Log what's being displayed
+        console.log('🎬 displayMovies called with', movies.length, 'movies');
+        
         if (clearGrid) {
           grid.innerHTML = '';
           // Re-add the ad space
@@ -434,6 +441,12 @@
         }
 
         movies.forEach(movie => {
+          const movieElement = this.createMovieElement(movie);
+          grid.appendChild(movieElement);
+        });
+        
+        // DEBUG: Verify DOM after rendering
+        console.log('✅ Grid now has', grid.querySelectorAll('.movie-item').length, 'movie items');
           const movieElement = this.createMovieElement(movie);
           grid.appendChild(movieElement);
         });

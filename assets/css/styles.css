@@ -488,49 +488,51 @@ select:focus {
 .movie-list {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(5, auto);
-  gap: var(--spacing-md);
+  gap: 12px;
   margin-bottom: var(--spacing-xl);
   width: 100%;
 }
 
-/* Responsive adjustments for different screen sizes */
-@media (min-width: 1200px) {
-  .movie-list {
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(5, auto);
-  }
+/* Force all items to display - no hiding */
+.movie-list .movie-item {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
-@media (min-width: 992px) and (max-width: 1199px) {
+/* Responsive adjustments - still show all 35 items, just adjust columns */
+@media (max-width: 1400px) {
   .movie-list {
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(6, auto);
-    gap: var(--spacing-sm);
+    gap: 10px;
   }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (max-width: 1200px) {
   .movie-list {
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(7, auto);
-    gap: var(--spacing-sm);
+    gap: 10px;
   }
 }
 
-@media (min-width: 576px) and (max-width: 767px) {
+@media (max-width: 992px) {
   .movie-list {
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto;
-    gap: var(--spacing-sm);
+    gap: 8px;
   }
 }
 
-@media (max-width: 575px) {
+@media (max-width: 768px) {
   .movie-list {
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto;
     gap: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .movie-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
   }
 }
 

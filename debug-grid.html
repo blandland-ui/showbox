@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Debug - 35 Items Test</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #0d0d0d;
+        }
+        .debug-info {
+            background: #1b1b1b;
+            color: #A3FC13;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+        .debug-item {
+            background: #2b2b2b;
+            border: 2px solid #A3FC13;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #A3FC13;
+            border-radius: 6px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #A3FC13;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Grid Layout Debugger</h1>
+    
+    <div class="debug-info">
+        <h2>Grid Status:</h2>
+        <p>Total Items: <span id="item-count">0</span></p>
+        <p>Grid Columns: <span id="grid-columns">Loading...</span></p>
+        <p>Grid Width: <span id="grid-width">Loading...</span></p>
+        <p>Screen Width: <span id="screen-width">Loading...</span></p>
+    </div>
+
+    <div class="movie-list" id="test-grid">
+        <!-- 35 test items will be inserted here -->
+    </div>
+
+    <script>
+        // Create 35 test items
+        const grid = document.getElementById('test-grid');
+        
+        for (let i = 1; i <= 35; i++) {
+            const item = document.createElement('div');
+            item.className = 'debug-item';
+            item.textContent = i;
+            grid.appendChild(item);
+        }
+
+        // Update debug info
+        function updateDebugInfo() {
+            const itemCount = document.getElementById('item-count');
+            const gridColumns = document.getElementById('grid-columns');
+            const gridWidth = document.getElementById('grid-width');
+            const screenWidth = document.getElementById('screen-width');
+            
+            itemCount.textContent = grid.children.length;
+            
+            const computedStyle = window.getComputedStyle(grid);
+            gridColumns.textContent = computedStyle.gridTemplateColumns;
+            gridWidth.textContent = grid.offsetWidth + 'px';
+            screenWidth.textContent = window.innerWidth + 'px';
+        }
+
+        updateDebugInfo();
+        
+        // Update on resize
+        window.addEventListener('resize', updateDebugInfo);
+
+        // Log to console as well
+        console.log('Grid element:', grid);
+        console.log('Grid computed style:', window.getComputedStyle(grid));
+        console.log('Grid children count:', grid.children.length);
+    </script>
+</body>
+</html>

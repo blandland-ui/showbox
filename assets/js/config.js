@@ -28,7 +28,7 @@ window.FossBOXConfig = {
       maxResults: 20
     },
     pagination: {
-      itemsPerPage: 20
+      itemsPerPage: 35
     }
   },
 
