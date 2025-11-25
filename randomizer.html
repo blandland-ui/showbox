@@ -85,9 +85,6 @@
       <button id="refresh-tv-btn" class="category-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
         📺 New TV Shows
       </button>
-      <button id="randomize-btn-top" class="randomize-btn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);">
-        🎲 Randomize
-      </button>
     </div>
     
     <div class="random-content-container" style="max-width: 1200px; margin: 0 auto;">
@@ -105,11 +102,6 @@
         .random-controls button.active {
           background: #0097a7 !important;
           box-shadow: 0 4px 12px rgba(0, 188, 212, 0.5);
-        }
-        .randomize-btn:hover {
-          background: linear-gradient(135deg, #ee5a6f, #ff6b6b) !important;
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4) !important;
         }
         .random-section {
           display: none;
@@ -150,9 +142,6 @@
       </button>
       <button id="refresh-tv-btn-bottom" class="category-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
         📺 New TV Shows
-      </button>
-      <button id="randomize-btn-bottom" class="randomize-btn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);">
-        🎲 Randomize
       </button>
     </div>
   </section>
@@ -202,8 +191,6 @@
       const tvBtn = document.getElementById('refresh-tv-btn');
       const moviesBtnBottom = document.getElementById('refresh-movies-btn-bottom');
       const tvBtnBottom = document.getElementById('refresh-tv-btn-bottom');
-      const randomizeBtnTop = document.getElementById('randomize-btn-top');
-      const randomizeBtnBottom = document.getElementById('randomize-btn-bottom');
       const moviesSection = document.getElementById('movies-section');
       const tvSection = document.getElementById('tv-section');
       
@@ -223,9 +210,9 @@
           }
         });
         
-        // Trigger the movie refresh
-        if (window.app && window.app.loadRandomMovies) {
-          window.app.loadRandomMovies();
+        // Trigger the movie refresh using RandomContentManager
+        if (window.RandomContentManager) {
+          window.RandomContentManager.loadRandomMovies();
         }
       }
 
@@ -243,22 +230,9 @@
           }
         });
         
-        // Trigger the TV refresh
-        if (window.app && window.app.loadRandomTV) {
-          window.app.loadRandomTV();
-        }
-      }
-      
-      function randomize() {
-        // Refresh the current category
-        if (currentCategory === 'movies') {
-          if (window.app && window.app.loadRandomMovies) {
-            window.app.loadRandomMovies();
-          }
-        } else {
-          if (window.app && window.app.loadRandomTV) {
-            window.app.loadRandomTV();
-          }
+        // Trigger the TV refresh using RandomContentManager
+        if (window.RandomContentManager) {
+          window.RandomContentManager.loadRandomTV();
         }
       }
 
@@ -267,8 +241,6 @@
       tvBtn?.addEventListener('click', showTV);
       moviesBtnBottom?.addEventListener('click', showMovies);
       tvBtnBottom?.addEventListener('click', showTV);
-      randomizeBtnTop?.addEventListener('click', randomize);
-      randomizeBtnBottom?.addEventListener('click', randomize);
 
       // Show movies by default on load
       showMovies();
