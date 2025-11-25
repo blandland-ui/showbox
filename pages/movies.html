@@ -196,6 +196,8 @@
       }
 
       init() {
+        console.log('🎬 MoviePage initialized');
+        console.log('📡 API Key present:', !!window.TMDB_API_KEY);
         this.totalPages = 1;
         this.loadMovies();
         this.setupFilterButtons();
@@ -244,6 +246,8 @@
         const grid = document.getElementById('movies-grid');
         const paginationContainer = document.getElementById('pagination-container');
 
+        console.log('🔄 loadMovies called - clearGrid:', clearGrid, 'category:', this.currentCategory, 'page:', this.currentPage);
+
         if (clearGrid) {
           grid.innerHTML = ''; // Clear grid completely - CSS will show loading text
           paginationContainer.style.display = 'none';
@@ -254,6 +258,8 @@
           if (!API_KEY) {
             throw new Error('API key not configured');
           }
+
+          console.log('📡 Fetching movies from TMDB...');
 
           // Fetch 2 pages to get 35+ items for 7x5 grid
           const page1Response = await fetch(
@@ -267,6 +273,8 @@
           const page1Data = await page1Response.json();
           let allResults = page1Data.results;
           
+          console.log('📦 Page 1 results:', allResults.length);
+          
           // If we need more items to reach 35, fetch next page
           if (allResults.length < 35 && page1Data.total_pages > this.currentPage) {
             const page2Response = await fetch(
@@ -275,6 +283,7 @@
             if (page2Response.ok) {
               const page2Data = await page2Response.json();
               allResults = [...allResults, ...page2Data.results];
+              console.log('📦 Page 2 results added. Total:', allResults.length);
             }
           }
           
@@ -295,13 +304,14 @@
           }
 
         } catch (error) {
-          console.error('Failed to load movies:', error);
+          console.error('❌ Failed to load movies:', error);
           if (clearGrid) {
             grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: var(--spacing-xl);">Failed to load movies. Please try again later.</div>';
           }
         }
 
         this.loading = false;
+        console.log('✅ loadMovies complete');
       }
 
       updatePagination() {
@@ -449,9 +459,6 @@
         
         // DEBUG: Verify DOM after rendering
         console.log('✅ Grid now has', grid.querySelectorAll('.movie-item').length, 'movie items');
-          const movieElement = this.createMovieElement(movie);
-          grid.appendChild(movieElement);
-        });
       }
 
       createMovieElement(movie) {
@@ -469,8 +476,8 @@
         movieDiv.innerHTML = `
           <img src="${posterUrl}" alt="${movie.title}" loading="lazy">
           <div class="movie-info">
-            <h4>${movie.title} (${releaseYear})</h4>
-            <p class="movie-rating" style="font-size: 0.85rem; margin: 4px 0;">⭐ ${rating}</p>
+            <h4 style="color: var(--text-primary) !important; display: block !important;">${movie.title} (${releaseYear})</h4>
+            <p class="movie-rating" style="color: var(--text-secondary) !important; font-size: 0.85rem !important; margin: 4px 0 !important; display: block !important;">⭐ ${rating}</p>
           </div>
         `;
 

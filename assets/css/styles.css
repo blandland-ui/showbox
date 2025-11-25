@@ -493,6 +493,17 @@ select:focus {
   margin-bottom: var(--spacing-xl);
   width: 100%;
   aspect-ratio: 7 / 5;
+  min-height: 400px;
+}
+
+/* Loading state for empty grid */
+.movie-list:empty::before {
+  content: '🎬 Loading movies...';
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--spacing-xl);
+  font-size: 1.1rem;
 }
 
 /* Force all items to display - no hiding */
@@ -827,9 +838,21 @@ select:focus {
 
 .movie-info h4 {
   margin: 0 0 var(--spacing-xs);
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   font-size: 0.9rem;
   line-height: 1.2;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.movie-rating {
+  color: var(--text-secondary) !important;
+  font-size: 0.85rem !important;
+  margin: 4px 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Movie poster container for TV indicator */
