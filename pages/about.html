@@ -6,6 +6,12 @@
   <meta name="description" content="About FossBOX - Your movie and TV show discovery platform">
   <title>About - FossBOX</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
+  <style>
+    /* Advanced Search Link */
+    .advanced-search-link{position:absolute;top:20px;right:340px;z-index:15;text-align:center;line-height:1.2}
+    .advanced-search-link a{color:#A3FC13;text-decoration:none;font-size:0.75rem;font-weight:600;transition:all 0.2s;display:block;padding:6px 10px;border:1px solid rgba(163,252,19,0.3);border-radius:4px;background:rgba(163,252,19,0.1);backdrop-filter:blur(10px)}
+    .advanced-search-link a:hover{color:#fff;background:rgba(163,252,19,0.3);border-color:#A3FC13;transform:scale(1.05)}
+  </style>
 </head>
 <body>
   <!-- Mobile Navigation -->
@@ -44,16 +50,21 @@
       </form>
       <div class="search-results" id="headerSearchResults" style="display: none;"></div>
     </div>
-
-    <!-- Navigation -->
-    <nav class="site-nav" role="navigation" aria-label="Main navigation">
-      <a href="../index.html">HOME</a>
-      <a href="movies.html">Movies</a>
-      <a href="tv.html">TV Shows</a>
-      <a href="cartoons.html">Cartoons/Anime</a>
-      <a href="about.html" style="color: var(--text-primary);">About</a>
-    </nav>
+    
+    <!-- Advanced Search Link -->
+    <div class="advanced-search-link">
+      <a href="#" id="advancedSearchLink" title="Advanced Search Options">Advanced<br>Search<br>Filters...</a>
+    </div>
   </header>
+  
+  <!-- Navigation -->
+  <nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <a href="../index.html">HOME</a>
+    <a href="movies.html">Movies</a>
+    <a href="tv.html">TV Shows</a>
+    <a href="cartoons.html">Cartoons/Anime</a>
+    <a href="about.html" style="color: var(--text-primary);">About</a>
+  </nav>
 
   <!-- Main content -->
   <main class="main-wrap" role="main" style="max-width: 800px; margin: 0 auto;">
