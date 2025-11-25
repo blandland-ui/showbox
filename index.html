@@ -39,6 +39,7 @@
       <a href="pages/movies.html">Movies</a>
       <a href="pages/tv.html">TV Shows</a>
       <a href="pages/cartoons.html">Cartoons/Anime</a>
+      <a href="randomizer.html">Random Discover</a>
       <a href="pages/about.html">About</a>
     </div>
   </nav>
@@ -65,6 +66,7 @@
       <a href="pages/movies.html">Movies</a>
       <a href="pages/tv.html">TV Shows</a>
       <a href="pages/cartoons.html">Cartoons/Anime</a>
+      <a href="randomizer.html">Random Discover</a>
       <a href="pages/about.html">About</a>
     </nav>
   </header>
@@ -159,64 +161,6 @@
       <span>Top Lists</span>
     </nav>
   </main>
-
-  <!-- Random Content Section -->
-  <section class="random-content-section" style="margin: 60px auto; max-width: 1400px; padding: 0 20px;">
-    <h2 style="color: var(--text-primary); text-align: center; font-size: 2.5rem; margin-bottom: 30px; font-weight: 800;">
-      🎲 Discover Something New
-    </h2>
-
-    <!-- Control Buttons -->
-    <div class="random-controls" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;">
-      <button id="refresh-movies-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
-        🎬 New Movies
-      </button>
-      <button id="refresh-tv-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
-        📺 New TV Shows
-      </button>
-      <button id="refresh-all-btn" style="background: linear-gradient(135deg, #00bcd4, #0097a7); color: #000; border: none; padding: 14px 28px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3); transition: all 0.2s;">
-        🎯 Surprise Me!
-      </button>
-    </div>
-    
-    <div class="random-content-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
-      <style>
-        @media (max-width: 768px) {
-          .random-content-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-          .random-content-section h2 { font-size: 2rem !important; }
-          .random-section h3 { font-size: 1.4rem !important; }
-          .random-controls { gap: 10px !important; }
-          .random-controls button { padding: 10px 16px !important; font-size: 0.85rem !important; }
-        }
-        .random-controls button:hover {
-          background: #0097a7 !important;
-          transform: translateY(-2px);
-        }
-        #refresh-all-btn:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4) !important;
-        }
-      </style>
-      
-      <!-- Random Movies -->
-      <div class="random-section">
-        <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
-          🎬 Random Movies
-        </h3>
-        <div class="movie-list" id="random-movies-grid" style="min-height: 400px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
-        </div>
-      </div>
-
-      <!-- Random TV Shows -->
-      <div class="random-section">
-        <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
-          📺 Random TV Shows
-        </h3>
-        <div class="movie-list" id="random-tv-grid" style="min-height: 400px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Footer -->
   <footer class="site-footer" role="contentinfo">

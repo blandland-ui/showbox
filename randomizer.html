@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FossBOX - Discover Random Movies and TV Shows">
+  <title>Random Discover - FossBOX</title>
+  
+  <!-- DevTools Protection Override - Must load FIRST -->
+  <script src="assets/js/devtools-protection-override.js"></script>
+  
+  <!-- Authentication Check -->
+  <script src="auth-check.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  
+  <!-- Configuration -->
+  <script src="assets/js/config.js"></script>
+  
+  <!-- Mobile Detection & Redirect -->
+  <script src="assets/js/mobile-redirect.js"></script>
+</head>
+<body>
+  <!-- Mobile Navigation -->
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open navigation menu">
+    <img src="assets/hamburger-icon.svg" alt="Menu">
+  </button>
+  
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+  
+  <nav class="mobile-nav-menu" id="mobileNavMenu" role="navigation" aria-label="Mobile navigation">
+    <div class="mobile-nav-header">
+      <a href="index.html" class="mobile-nav-logo">FossBOX</a>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close navigation menu">✕</button>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html">HOME</a>
+      <a href="pages/movies.html">Movies</a>
+      <a href="pages/tv.html">TV Shows</a>
+      <a href="pages/cartoons.html">Cartoons/Anime</a>
+      <a href="randomizer.html" class="active">Random Discover</a>
+      <a href="pages/about.html">About</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="site-header" style="height: 200px; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)); position: relative; display: flex; align-items: center; justify-content: center;">
+    <div class="logo" style="display: flex; align-items: center; position: absolute; left: 80px; top: 50%; transform: translateY(-50%); z-index: 10;">
+      <img src="assets/site-logo.png" alt="FossBOX Logo" style="height: 100px; margin-right: 20px; opacity: 0.5; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);">
+      <span style="font-size: 3rem; font-weight: 800; color: #A3FC13; text-shadow: 0 4px 8px rgba(0,0,0,0.8);">FossBOX</span>
+    </div>
+    
+    <!-- Header Search -->
+    <div class="header-search">
+      <form class="search-form" id="headerSearchForm">
+        <input type="text" id="headerSearchInput" placeholder="Search movies & TV shows..." autocomplete="off">
+        <button type="submit" class="search-btn">🔍</button>
+      </form>
+      <div class="search-results" id="headerSearchResults" style="display: none;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="site-nav" role="navigation" aria-label="Main navigation">
+      <a href="index.html">HOME</a>
+      <a href="pages/movies.html">Movies</a>
+      <a href="pages/tv.html">TV Shows</a>
+      <a href="pages/cartoons.html">Cartoons/Anime</a>
+      <a href="randomizer.html" class="active">Random Discover</a>
+      <a href="pages/about.html">About</a>
+    </nav>
+  </header>
+
+  <!-- Random Content Section -->
+  <section class="random-content-section" style="margin: 60px auto; max-width: 1400px; padding: 0 20px;">
+    <h2 style="color: var(--text-primary); text-align: center; font-size: 2.5rem; margin-bottom: 30px; font-weight: 800;">
+      🎲 Discover Something New
+    </h2>
+
+    <!-- Control Buttons -->
+    <div class="random-controls" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;">
+      <button id="refresh-movies-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
+        🎬 New Movies
+      </button>
+      <button id="refresh-tv-btn" style="background: #00bcd4; color: #000; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;">
+        📺 New TV Shows
+      </button>
+    </div>
+    
+    <div class="random-content-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
+      <style>
+        @media (max-width: 768px) {
+          .random-content-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+          .random-content-section h2 { font-size: 2rem !important; }
+          .random-section h3 { font-size: 1.4rem !important; }
+          .random-controls { gap: 10px !important; }
+          .random-controls button { padding: 10px 16px !important; font-size: 0.85rem !important; }
+        }
+        .random-controls button:hover {
+          background: #0097a7 !important;
+          transform: translateY(-2px);
+        }
+      </style>
+      
+      <!-- Random Movies -->
+      <div class="random-section">
+        <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
+          🎬 Random Movies
+        </h3>
+        <div class="movie-list" id="random-movies-grid" style="min-height: 400px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
+        </div>
+      </div>
+
+      <!-- Random TV Shows -->
+      <div class="random-section">
+        <h3 style="color: #9bf05b; font-size: 1.6rem; margin-bottom: 15px; text-align: center; font-weight: 700;">
+          📺 Random TV Shows
+        </h3>
+        <div class="movie-list" id="random-tv-grid" style="min-height: 400px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <p>&copy; 2024 www.fossbox.cc. All rights reserved.</p>
+    <p>Powered by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">The Movie Database (TMDb)</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/app.js"></script>
+  
+  <!-- Mobile Navigation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileNavToggle = document.getElementById('mobileNavToggle');
+      const mobileNavMenu = document.getElementById('mobileNavMenu');
+      const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+      const mobileNavClose = document.getElementById('mobileNavClose');
+      
+      function openMobileNav() {
+        mobileNavMenu.classList.add('active');
+        mobileNavOverlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+      }
+      
+      function closeMobileNav() {
+        mobileNavMenu.classList.remove('active');
+        mobileNavOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      
+      mobileNavToggle?.addEventListener('click', openMobileNav);
+      mobileNavClose?.addEventListener('click', closeMobileNav);
+      mobileNavOverlay?.addEventListener('click', closeMobileNav);
+      
+      // Close on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileNavMenu.classList.contains('active')) {
+          closeMobileNav();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
