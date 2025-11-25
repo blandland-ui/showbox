@@ -20,7 +20,8 @@
   --text-dim: #A3FC13;
   --text-dark: #A3FC13;
   
-  --accent-primary: #111111;
+  --accent-primary: #fe531e;
+  --accent-primary-secondary: #fe1eef;
   --accent-secondary: #444444;
   
   --shadow-text: 0 2px 8px rgba(0, 0, 0, 0.8);
