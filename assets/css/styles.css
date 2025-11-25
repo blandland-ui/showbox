@@ -351,7 +351,7 @@ img {
 
 .refine-section h3 {
   margin: 0 0 var(--spacing-sm);
-  color: var(--text-primary);
+  color: var(--accent-primary);
 }
 
 .filter-group {
@@ -362,7 +362,7 @@ img {
 
 .filter-group label {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--accent-primary);
 }
 
 select {
