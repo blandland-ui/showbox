@@ -961,11 +961,11 @@ select:focus {
 }
 
 .breadcrumb span {
-  color: var(--text-dark);
+  color: #fe531e;
 }
 
 .breadcrumb a {
-  color: var(--text-muted);
+  color: #fe531e;
 }
 
 /* === RESPONSIVE DESIGN === */
