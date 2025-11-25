@@ -1,0 +1,59 @@
+# FossBOX ShowBox Configuration
+
+# Disable any server-side script injection
+php_flag display_errors Off
+php_flag log_errors On
+
+# Allow directory listing (optional - remove if not needed)
+Options -Indexes
+
+# Prevent .htaccess from being viewed
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+# Disable server signature
+ServerSignature Off
+
+# Custom error pages (optional)
+ErrorDocument 404 /showbox/404.html
+ErrorDocument 403 /showbox/403.html
+
+# Allow CORS for API requests
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # X-XSS-Protection
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # X-Frame-Options
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # X-Content-Type-Options
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Referrer-Policy
+    Header set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>
+
+# Cache control for static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
