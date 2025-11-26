@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FossBOX - Discover Random Movies and TV Shows">
-  <title>Random Discover - FossBOX</title>
-  
-  <!-- DevTools Protection Override - Must load FIRST -->
-  <script src="assets/js/devtools-protection-override.js"></script>
+  <meta name="description" content="Randomly discover movies and TV shows">
+  <title>Random Discovery - FossBOX</title>
   
   <!-- Authentication Check -->
   <script src="auth-check.js"></script>
@@ -17,9 +14,6 @@
   
   <!-- Configuration -->
   <script src="assets/js/config.js"></script>
-  
-  <!-- Mobile Detection & Redirect -->
-  <script src="assets/js/mobile-redirect.js"></script>
 </head>
 <body>
   <!-- Header -->
@@ -33,6 +27,7 @@
     <div class="header-search">
       <form class="search-form" id="headerSearchForm">
         <input type="text" id="headerSearchInput" placeholder="Search movies & TV shows..." autocomplete="off">
+        <a href="advanced-search.html">Advanced<br />Search!</a>
         <button type="submit" class="search-btn">🔍</button>
       </form>
       <div class="search-results" id="headerSearchResults" style="display: none;"></div>

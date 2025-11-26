@@ -6,9 +6,6 @@
   <meta name="description" content="Advanced Search - Filter movies and TV shows by multiple criteria">
   <title>Advanced Search - FossBOX</title>
   
-  <!-- DevTools Protection Override -->
-  <script src="assets/js/devtools-protection-override.js"></script>
-  
   <!-- Authentication Check -->
   <script src="auth-check.js"></script>
   
@@ -30,6 +27,7 @@
     <div class="header-search">
       <form class="search-form" id="headerSearchForm">
         <input type="text" id="headerSearchInput" placeholder="Search movies & TV shows..." autocomplete="off">
+        <a href="advanced-search.html">Advanced<br />Search!</a>
         <button type="submit" class="search-btn">🔍</button>
       </form>
       <div class="search-results" id="headerSearchResults" style="display: none;"></div>
@@ -47,19 +45,22 @@
   </header>
 
   <main class="main-wrap" style="max-width: 1400px; margin: 40px auto; padding: 0 40px;">
-    <!-- Breadcrumb -->
+   
+
+    
+     <!-- Breadcrumb -->
     <nav class="breadcrumb" aria-label="Breadcrumb" style="margin-bottom: 30px; padding: 12px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">
       <a href="index.html" style="color: #fe531e !important; text-decoration: none; transition: opacity 0.2s;">Home</a>
       <span style="color: var(--text-dim); margin: 0 8px;">›</span>
       <span style="color: #fe531e !important; font-weight: 500;">Advanced Search</span>
-    </nav><br />
-
-    <!-- Page Title -->
-    <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: #fe531e !important; padding: 15px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">Advanced Search</h1><br />
-    <p style="color: #fe531e !important; margin-bottom: 40px; font-size: 1.1rem; padding: 12px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">Filter movies and TV shows using multiple criteria</p>
-
+    </nav>
     <!-- Advanced Search Form -->
     <div class="advanced-search-container" style="background: var(--bg-secondary); padding: 40px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin-bottom: 40px;">
+        
+    <!-- Page Title -->
+    <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: #fe531e !important; padding: 15px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">Advanced Search!  </h1><br />
+    <p style="color: #fe531e !important; margin-bottom: 40px; font-size: 1.1rem; padding: 12px 20px; background-color: rgba(27, 27, 27, 0.9); border-radius: 8px; display: inline-block;">Filter movies and TV shows with ease, using advanced criteria specifications.</p>
+
       <form id="advancedSearchForm">
         
         <!-- Content Type Selection -->
@@ -219,19 +220,33 @@
 
     <!-- Results Section -->
     <div id="resultsSection" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-        <h2 style="font-size: 2rem; color: var(--accent-primary);">Search Results</h2>
-        <span id="resultCount" style="color: var(--text-dim); font-size: 1.1rem;"></span>
+      <!-- Back to Search Link -->
+      <div style="margin-bottom: 30px;">
+        <a href="javascript:void(0)" id="backToSearchLink" style="font-size: 1.2rem; text-decoration: none; display: inline-block; padding: 12px 20px; background: rgba(27, 27, 27, 0.9); border-radius: 8px; transition: all 0.3s;">
+          Go back to <span style="color: var(--accent-primary); font-weight: 600;">Refine Search some more</span>
+        </a>
       </div>
       
-      <div id="resultsGrid" class="movie-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px;">
+      <br />
+      
+      <!-- Results Count -->
+      <div style="margin-bottom: 25px;">
+        <span id="resultCount" style="color: var(--text-primary); font-size: 1.2rem; font-weight: 600;"></span>
+      </div>
+      
+      <!-- 7x5 Grid (35 items per page) -->
+      <div id="resultsGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 20px; margin-bottom: 40px;">
         <!-- Results will be populated here -->
       </div>
 
-      <!-- Load More Button -->
-      <div style="text-align: center; margin-top: 40px;">
-        <button id="loadMoreBtn" style="display: none; padding: 12px 40px; font-size: 1rem; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
-          Load More
+      <!-- Pagination -->
+      <div id="pagination" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 40px;">
+        <button id="prevPageBtn" style="padding: 10px 20px; font-size: 1rem; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s;" disabled>
+          ← Previous
+        </button>
+        <span id="pageInfo" style="color: var(--text-primary); font-size: 1rem; font-weight: 600;"></span>
+        <button id="nextPageBtn" style="padding: 10px 20px; font-size: 1rem; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s;" disabled>
+          Next →
         </button>
       </div>
     </div>
@@ -262,6 +277,47 @@
   <style>
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+
+    #backToSearchLink:hover span,
+    #backToSearchLink:focus span {
+      color: var(--text-primary) !important;
+    }
+
+    /* Force 7-column grid on desktop */
+    #resultsGrid {
+      grid-template-columns: repeat(7, 1fr) !important;
+    }
+
+    /* Responsive grid for results - only on smaller screens */
+    @media (max-width: 1200px) {
+      #resultsGrid {
+        grid-template-columns: repeat(6, 1fr) !important;
+      }
+    }
+
+    @media (max-width: 992px) {
+      #resultsGrid {
+        grid-template-columns: repeat(5, 1fr) !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #resultsGrid {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+    }
+
+    @media (max-width: 576px) {
+      #resultsGrid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+    }
+
+    @media (max-width: 420px) {
+      #resultsGrid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
     }
 
     .genre-checkbox {
@@ -330,7 +386,7 @@
 
   <script>
     // TMDB API Configuration
-    const API_KEY = window.CONFIG?.TMDB_API_KEY || '';
+    const API_KEY = window.TMDB_API_KEY || window.FossBOXConfig?.api?.tmdb?.key || '';
     const API_BASE = 'https://api.themoviedb.org/3';
     
     let currentPage = 1;
@@ -442,16 +498,47 @@
           
           if (this.value === 'on') {
             textQuerySection.style.opacity = '1';
-            textQuerySection.style.pointerEvents = 'auto';
+            textQuerySection.style.pointerEvents = 'all';
             textQueryInput.disabled = false;
-            textQueryInput.focus();
           } else {
             textQuerySection.style.opacity = '0.4';
             textQuerySection.style.pointerEvents = 'none';
             textQueryInput.disabled = true;
-            textQueryInput.value = '';
           }
         });
+      });
+
+      // Back to search link
+      document.getElementById('backToSearchLink').addEventListener('click', function() {
+        const searchContainer = document.querySelector('.advanced-search-container');
+        const breadcrumb = document.querySelector('.breadcrumb');
+        const resultsSection = document.getElementById('resultsSection');
+        
+        if (searchContainer) searchContainer.style.display = 'block';
+        if (breadcrumb) breadcrumb.style.display = 'inline-block';
+        resultsSection.style.display = 'none';
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Pagination buttons
+      document.getElementById('prevPageBtn').addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          displayResults(currentResults);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      document.getElementById('nextPageBtn').addEventListener('click', function() {
+        const itemsPerPage = 35;
+        const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+        if (currentPage < totalPages) {
+          currentPage++;
+          displayResults(currentResults);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
 
       // Form validation
@@ -590,63 +677,82 @@
       }
     }
 
-    // Fetch from specific list
+    // Fetch from specific list - fetch multiple pages to get enough results
     async function fetchFromList(listType, contentType) {
       let endpoint = '';
+      let allResults = [];
       
-      switch(listType) {
-        case 'trending':
-          endpoint = `${API_BASE}/trending/${contentType}/week?api_key=${API_KEY}&page=${currentPage}`;
-          break;
-        case 'popular':
-          endpoint = `${API_BASE}/${contentType}/popular?api_key=${API_KEY}&page=${currentPage}`;
-          break;
-        case 'top_rated':
-          endpoint = `${API_BASE}/${contentType}/top_rated?api_key=${API_KEY}&page=${currentPage}`;
-          break;
-        case 'now_playing':
-          endpoint = `${API_BASE}/movie/now_playing?api_key=${API_KEY}&page=${currentPage}`;
-          break;
-        case 'upcoming':
-          endpoint = `${API_BASE}/movie/upcoming?api_key=${API_KEY}&page=${currentPage}`;
-          break;
-        case 'airing_today':
-          endpoint = `${API_BASE}/tv/airing_today?api_key=${API_KEY}&page=${currentPage}`;
-          break;
-        case 'on_the_air':
-          endpoint = `${API_BASE}/tv/on_the_air?api_key=${API_KEY}&page=${currentPage}`;
-          break;
+      // Fetch enough pages to get at least 100 results (for filtering)
+      const pagesToFetch = 5; // 5 pages x 20 results = 100 results
+      
+      for (let page = 1; page <= pagesToFetch; page++) {
+        switch(listType) {
+          case 'trending':
+            endpoint = `${API_BASE}/trending/${contentType}/week?api_key=${API_KEY}&page=${page}`;
+            break;
+          case 'popular':
+            endpoint = `${API_BASE}/${contentType}/popular?api_key=${API_KEY}&page=${page}`;
+            break;
+          case 'top_rated':
+            endpoint = `${API_BASE}/${contentType}/top_rated?api_key=${API_KEY}&page=${page}`;
+            break;
+          case 'now_playing':
+            endpoint = `${API_BASE}/movie/now_playing?api_key=${API_KEY}&page=${page}`;
+            break;
+          case 'upcoming':
+            endpoint = `${API_BASE}/movie/upcoming?api_key=${API_KEY}&page=${page}`;
+            break;
+          case 'airing_today':
+            endpoint = `${API_BASE}/tv/airing_today?api_key=${API_KEY}&page=${page}`;
+            break;
+          case 'on_the_air':
+            endpoint = `${API_BASE}/tv/on_the_air?api_key=${API_KEY}&page=${page}`;
+            break;
+        }
+        
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        totalPages = data.total_pages;
+        
+        if (data.results && data.results.length > 0) {
+          allResults = [...allResults, ...data.results];
+        }
       }
       
-      const response = await fetch(endpoint);
-      const data = await response.json();
-      totalPages = data.total_pages;
-      
-      return data.results || [];
+      return allResults;
     }
 
-    // Fetch using discover endpoint
+    // Fetch using discover endpoint - fetch multiple pages
     async function fetchDiscoverResults(contentType) {
       const yearFrom = document.getElementById('yearFrom').value;
       const yearTo = document.getElementById('yearTo').value;
       const language = document.getElementById('language').value;
       const minRating = document.getElementById('minRating').value;
       
-      let url = `${API_BASE}/discover/${contentType}?api_key=${API_KEY}&page=${currentPage}`;
+      let allResults = [];
+      const pagesToFetch = 5; // Fetch 5 pages to get ~100 results
       
-      if (yearFrom) url += `&primary_release_date.gte=${yearFrom}-01-01`;
-      if (yearTo) url += `&primary_release_date.lte=${yearTo}-12-31`;
-      if (language) url += `&with_original_language=${language}`;
-      if (minRating) url += `&vote_average.gte=${minRating}`;
-      if (selectedGenres.length > 0) url += `&with_genres=${selectedGenres.join(',')}`;
-      if (selectedActorId) url += `&with_cast=${selectedActorId}`;
-      if (selectedDirectorId) url += `&with_crew=${selectedDirectorId}`;
+      for (let page = 1; page <= pagesToFetch; page++) {
+        let url = `${API_BASE}/discover/${contentType}?api_key=${API_KEY}&page=${page}`;
+        
+        if (yearFrom) url += `&primary_release_date.gte=${yearFrom}-01-01`;
+        if (yearTo) url += `&primary_release_date.lte=${yearTo}-12-31`;
+        if (language) url += `&with_original_language=${language}`;
+        if (minRating) url += `&vote_average.gte=${minRating}`;
+        if (selectedGenres.length > 0) url += `&with_genres=${selectedGenres.join(',')}`;
+        if (selectedActorId) url += `&with_cast=${selectedActorId}`;
+        if (selectedDirectorId) url += `&with_crew=${selectedDirectorId}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        totalPages = data.total_pages;
+        
+        if (data.results && data.results.length > 0) {
+          allResults = [...allResults, ...data.results];
+        }
+      }
       
-      const response = await fetch(url);
-      const data = await response.json();
-      totalPages = data.total_pages;
-      
-      return data.results || [];
+      return allResults;
     }
 
     // Apply additional filters
@@ -794,25 +900,43 @@
 
     // Display results
     function displayResults(results) {
+      // Hide search form and show only results
+      const searchContainer = document.querySelector('.advanced-search-container');
+      const breadcrumb = document.querySelector('.breadcrumb');
       const resultsSection = document.getElementById('resultsSection');
       const resultsGrid = document.getElementById('resultsGrid');
       const resultCount = document.getElementById('resultCount');
       const noResults = document.getElementById('noResults');
-      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      
+      // Hide search form and breadcrumb
+      if (searchContainer) searchContainer.style.display = 'none';
+      if (breadcrumb) breadcrumb.style.display = 'none';
       
       if (results.length === 0) {
-        resultsSection.style.display = 'none';
+        resultsSection.style.display = 'block';
+        resultsGrid.innerHTML = '';
         noResults.style.display = 'block';
+        resultCount.textContent = '';
+        updatePagination();
         return;
       }
       
       resultsSection.style.display = 'block';
       noResults.style.display = 'none';
-      resultCount.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} found`;
+      
+      // Show total count
+      const totalResults = currentResults.length;
+      resultCount.textContent = `Showing ${totalResults} result${totalResults !== 1 ? 's' : ''}`;
       
       const contentType = document.querySelector('input[name="contentType"]:checked').value;
       
-      resultsGrid.innerHTML = results.map(item => {
+      // Calculate pagination - 35 items per page (7x5 grid)
+      const itemsPerPage = 35;
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageResults = results.slice(startIndex, endIndex);
+      
+      resultsGrid.innerHTML = pageResults.map(item => {
         const title = item.title || item.name;
         const year = item.release_date ? item.release_date.split('-')[0] : 
                      item.first_air_date ? item.first_air_date.split('-')[0] : 'N/A';
@@ -833,8 +957,29 @@
         `;
       }).join('');
       
-      // Show/hide load more button
-      loadMoreBtn.style.display = currentPage < totalPages ? 'block' : 'none';
+      // Update pagination
+      updatePagination();
+    }
+
+    // Update pagination controls
+    function updatePagination() {
+      const itemsPerPage = 35;
+      const totalItems = currentResults.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      
+      const prevBtn = document.getElementById('prevPageBtn');
+      const nextBtn = document.getElementById('nextPageBtn');
+      const pageInfo = document.getElementById('pageInfo');
+      
+      pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+      
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage >= totalPages;
+      
+      prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+      nextBtn.style.opacity = currentPage >= totalPages ? '0.5' : '1';
+      prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+      nextBtn.style.cursor = currentPage >= totalPages ? 'not-allowed' : 'pointer';
     }
 
     // Close suggestions when clicking outside

@@ -50,7 +50,6 @@ html, body {
   margin: 0;
   padding: 0;
   background: var(--bg-primary) url('../site-bg.jpg') fixed center/cover no-repeat;
-  color: var(--text-secondary);
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   line-height: 1.5;
 }
@@ -243,6 +242,11 @@ img {
   z-index: 5;
 }
 
+.site-nav a:hover {
+  color: var(--accent-primary) !important;
+  text-decoration: underline;
+}
+
 .content-row {
   display: flex;
   gap: var(--spacing-lg);
@@ -251,10 +255,13 @@ img {
 }
 
 .main-wrap {
-  padding: 0 var(--spacing-lg) var(--spacing-xl) var(--spacing-lg);
+  padding: 0 var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
+  margin-bottom: 25px;
   opacity: 0.9;
 }
-
+.main-wrap h1 {
+  margin-top: -12px;
+}
 .site-footer {
   padding: var(--spacing-xl) var(--spacing-lg);
   text-align: center;
@@ -987,6 +994,7 @@ select:focus {
   
   .site-header {
     height: 300px;
+    margin-bottom: 0px;
   }
   
   .site-header .logo {
@@ -1014,6 +1022,9 @@ select:focus {
   .site-nav {
     flex-wrap: wrap;
     gap: var(--spacing-md);
+  }
+  .site-nav a:focus {
+    color: var(--accent-primary);
   }
   
   .carousel-btn {
@@ -1176,6 +1187,16 @@ select:focus {
   
   .site-header .logo {
     font-size: 1.5rem;
+    left: 40px !important;
+  }
+  
+  .site-header .logo img {
+    height: 70px !important;
+    margin-right: 10px !important;
+  }
+  
+  .site-header .logo span {
+    font-size: 2rem !important;
   }
   
   .top-lists {
@@ -1185,8 +1206,21 @@ select:focus {
 
 @media (max-width: 480px) {
   .site-header {
-    height: 250px;
+    height: 200px;
     padding: 0 var(--spacing-md);
+  }
+  
+  .site-header .logo {
+    left: 20px !important;
+  }
+  
+  .site-header .logo img {
+    height: 50px !important;
+    margin-right: 8px !important;
+  }
+  
+  .site-header .logo span {
+    font-size: 1.5rem !important;
   }
   
   .content-row,

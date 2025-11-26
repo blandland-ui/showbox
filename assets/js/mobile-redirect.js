@@ -27,12 +27,15 @@
     
     const isMobileUA = mobileKeywords.some(keyword => userAgent.includes(keyword));
     
-    // Check screen size
-    const isSmallScreen = window.innerWidth <= 768 || window.screen.width <= 768;
+    // Prevent false positive from DevTools opening
+    // Only use screen.width (device), not window.innerWidth (viewport)
+    const isSmallScreen = window.screen.width <= 768;
     
     // Check touch capability
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
+    // Only redirect if user agent is mobile OR (small screen AND touch device)
+    // This prevents DevTools from triggering redirect
     return isMobileUA || (isSmallScreen && isTouchDevice);
   }
   
