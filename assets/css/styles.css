@@ -242,7 +242,15 @@ img {
   z-index: 5;
 }
 
-.site-nav a:hover {
+.site-nav a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.site-nav a:hover,
+.site-nav a:focus {
   color: var(--accent-primary) !important;
   text-decoration: underline;
 }
@@ -970,11 +978,18 @@ select:focus {
 }
 
 .breadcrumb span {
-  color: #fe531e;
+  color: var(--accent-primary);
 }
 
 .breadcrumb a {
-  color: #fe531e;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus {
+  color: var(--accent-primary);
+  text-decoration: underline;
 }
 
 /* === RESPONSIVE DESIGN === */
@@ -1187,16 +1202,6 @@ select:focus {
   
   .site-header .logo {
     font-size: 1.5rem;
-    left: 40px !important;
-  }
-  
-  .site-header .logo img {
-    height: 70px !important;
-    margin-right: 10px !important;
-  }
-  
-  .site-header .logo span {
-    font-size: 2rem !important;
   }
   
   .top-lists {
@@ -1206,21 +1211,8 @@ select:focus {
 
 @media (max-width: 480px) {
   .site-header {
-    height: 200px;
+    height: 250px;
     padding: 0 var(--spacing-md);
-  }
-  
-  .site-header .logo {
-    left: 20px !important;
-  }
-  
-  .site-header .logo img {
-    height: 50px !important;
-    margin-right: 8px !important;
-  }
-  
-  .site-header .logo span {
-    font-size: 1.5rem !important;
   }
   
   .content-row,
