@@ -106,12 +106,67 @@ img {
 }
 
 .site-header .logo {
-  position: relative;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 10;
   color: var(--text-primary);
   font-size: 2rem;
   font-weight: 700;
   text-shadow: var(--shadow-text);
+  flex-direction: row;
+}
+
+.logo-img {
+  height: 70px;
+  margin-right: 12px;
+  opacity: 0.5;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);
+  transition: height 0.2s;
+}
+.logo-text {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-shadow: 0 4px 8px rgba(0,0,0,0.8);
+}
+.logo-accent {
+  color: var(--accent-primary);
+}
+
+@media (max-width: 768px) {
+  .site-header .logo {
+    left: 10px;
+    top: 16px;
+    transform: none;
+    flex-direction: row;
+    position: absolute;
+  }
+  .logo-img {
+    height: 44px;
+    margin-right: 8px;
+  }
+  .logo-text {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header .logo {
+    left: 4px;
+    top: 8px;
+    flex-direction: row;
+  }
+  .logo-img {
+    height: 32px;
+    margin-right: 6px;
+  }
+  .logo-text {
+    font-size: 1rem;
+  }
 }
 
 /* === HEADER SEARCH === */

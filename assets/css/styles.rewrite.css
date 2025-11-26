@@ -1,0 +1,137 @@
+/* === BlackSiteDB Modern CSS Rewrite === */
+
+/* === CSS VARIABLES === */
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1b1b1b;
+  --bg-tertiary: #1f1f1f;
+  --bg-accent: #2b2b2b;
+  --border-color: rgba(255,255,255,0.06);
+  --border-light: rgba(255,255,255,0.15);
+  --text-primary: #A3FC13;
+  --text-muted: #A3FC13;
+  --text-dim: #A3FC13;
+  --accent-primary: #fe531e;
+  --accent-secondary: #444444;
+  --shadow-text: 0 2px 8px rgba(0,0,0,0.8);
+  --transition-fast: 0.2s;
+  --radius-small: 6px;
+  --radius-medium: 8px;
+  --radius-large: 10px;
+  --radius-circle: 50%;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+}
+
+/* === RESET & BASE === */
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary) url('../site-bg.jpg') fixed center/cover no-repeat;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+@media (max-width: 768px) {
+  html, body { background: var(--bg-primary) url('../m-site-bg.jpg') fixed center/cover no-repeat; }
+}
+
+/* === TYPOGRAPHY === */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--accent-primary) !important;
+  font-family: inherit;
+  font-weight: 700;
+  margin-top: 0;
+}
+h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover,
+h1:focus, h2:focus, h3:focus, h4:focus, h5:focus, h6:focus {
+  color: var(--text-primary) !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* === LINKS === */
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover, a:focus {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+/* === BUTTONS === */
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+/* === IMAGES === */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* === NAVIGATION === */
+.site-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(4px);
+  z-index: 5;
+}
+.site-nav a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+.site-nav a:hover, .site-nav a:focus {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+/* === HEADER === */
+.site-header {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  opacity: 0.9;
+}
+.site-header .logo {
+  position: relative;
+  z-index: 10;
+  color: var(--text-primary);
+  font-size: 2rem;
+  font-weight: 700;
+  text-shadow: var(--shadow-text);
+}
+
+/* === UTILITY CLASSES === */
+.text-center { text-align: center; }
+.hidden { display: none !important; }
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: var(--spacing-xs); }
+.mb-2 { margin-bottom: var(--spacing-sm); }
+.mb-3 { margin-bottom: var(--spacing-md); }
+.mb-4 { margin-bottom: var(--spacing-lg); }
+.loading { opacity: 0.6; pointer-events: none; }
+.text-muted { color: var(--text-muted); }
+
+/* === Responsive and layout rules, carousel, sidebar, etc. should be added below as needed === */
