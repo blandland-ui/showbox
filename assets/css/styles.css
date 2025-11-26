@@ -3,9 +3,9 @@
   display: flex;
   align-items: center;
   position: absolute;
-  left: 80px;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 20px;
+  top: 30px;
+  transform: none;
   z-index: 10;
 }
 .logo-img {
@@ -324,8 +324,10 @@ img {
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 15;
+  z-index: 50;
   width: 420px;
+  overflow: visible !important;
+  display: block;
 }
 
 .search-form {
@@ -394,6 +396,8 @@ img {
   top: 100%;
   left: 0;
   right: 0;
+  min-width: 320px;
+  max-width: 90vw;
   background: rgba(0, 0, 0, 0.95);
   border: 1px solid var(--border-color);
   border-top: none;
@@ -401,7 +405,8 @@ img {
   max-height: 400px;
   overflow-y: auto;
   backdrop-filter: blur(10px);
-  z-index: 20;
+  z-index: 1001;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
 }
 
 .search-result-item {
