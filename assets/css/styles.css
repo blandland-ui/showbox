@@ -9,10 +9,10 @@
   z-index: 10;
 }
 .logo-img {
-  height: 100px;
-  margin-right: 20px;
+  height: 40px;
+  margin-right: 10px;
   opacity: 0.5;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
   z-index: 4;
 }
 .logo-text {
@@ -26,62 +26,71 @@
 }
 
 @media (max-width: 768px) {
+  .logo-img {
+    height: 18px !important;
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+    display: inline-block !important;
+  }
   .site-header {
     height: auto;
     padding: 0 8px;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    position: relative;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    position: relative !important;
     display: flex !important;
+    gap: 0;
   }
   .logo {
-    position: static;
-    left: 0;
-    top: 0;
-    transform: none;
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    z-index: 4;
-    width: 100%;
-    justify-content: flex-start;
+    position: static !important;
+    left: 0 !important;
+    top: 0 !important;
+    transform: none !important;
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 8px !important;
+    z-index: 4 !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    background: none !important;
   }
   .logo-img {
     height: 38px !important;
-    margin-left: 8px;
-    margin-right: 8px;
-    z-index: 4;
-    position: static;
-    flex-shrink: 0;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+    z-index: 4 !important;
+    position: static !important;
+    flex-shrink: 0 !important;
   }
   .logo-text {
     font-size: 1.1rem !important;
-    font-weight: 700;
-    flex-shrink: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-weight: 700 !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
   .site-nav {
-    position: relative;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    margin-top: 12px;
-    z-index: 5;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 8px;
-    background: rgba(0,0,0,0.15);
-    padding: 4px 0 0 0;
-    clear: both;
-    width: 100%;
+    position: static !important;
+    margin-top: 12px !important;
+    z-index: 5 !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    background: rgba(0,0,0,0.15) !important;
+    padding: 4px 0 0 0 !important;
+    clear: both !important;
+    width: 100% !important;
+    display: flex !important;
   }
 }
 
 @media (max-width: 480px) {
+  .logo-img {
+    display: none !important;
+  }
   .site-header {
     height: auto;
     padding: 0 4px;
