@@ -1,19 +1,22 @@
 /* --- LOGO/HEADER/NAV CLASSES FOR LAYOUT --- */
 .logo {
-  position: absolute;
-  top: 40px;
-  left: 35px;
-  margin: 0;
+  position: relative;
+  margin: 0 32px 0 0;
   z-index: 10;
-  /* Remove flex and alignment so it's not centered by parent */
-}
+  display: flex;
+  align-items: center;
+
 .logo-img {
-  height: 32px !important;
-  width: auto !important;
+  height: 32px;
+  width: auto;
   margin-right: 10px;
   opacity: 0.5;
   box-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
   z-index: 4;
+  display: block;
+}
+
+  /* Remove flex and alignment so it's not centered by parent */
 }
 .logo-text {
   font-size: 3rem;
@@ -297,12 +300,15 @@ img {
 /* === LAYOUT === */
 .site-header {
   position: relative;
-  height: 400px;
+  height: 120px;
+  min-height: 80px;
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
   overflow: hidden;
   display: flex;
   align-items: center;
   padding: 0 var(--spacing-lg);
-  opacity: 0.9;
+  opacity: 0.95;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
 }
 
 .site-header .logo {
