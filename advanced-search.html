@@ -35,12 +35,12 @@
 
     <!-- Navigation -->
     <nav class="site-nav" role="navigation" aria-label="Main navigation">
-      <a href="index.html">HOME</a>
-      <a href="pages/movies.html">Movies</a>
-      <a href="pages/tv.html">TV Shows</a>
-      <a href="pages/cartoons.html">Cartoons/Anime</a>
-      <a href="randomizer.html">Random Discover</a>
-      <a href="pages/about.html">About</a>
+      <a href="index.html" style="color: var(--text-primary);">HOME</a>
+      <a href="pages/movies.html" style="color: var(--text-primary);">Movies</a>
+      <a href="pages/tv.html" style="color: var(--text-primary);">TV Shows</a>
+      <a href="pages/cartoons.html" style="color: var(--text-primary);">Cartoons/Anime</a>
+      <a href="randomizer.html" style="color: var(--text-primary);">Random Discover</a>
+      <a href="pages/about.html" style="color: var(--text-primary);">About</a>
     </nav>
   </header>
 
@@ -275,6 +275,13 @@
   <script src="assets/js/app.js"></script>
   
   <style>
+    .site-nav a {
+      color: var(--text-primary) !important;
+      transition: color 0.2s;
+    }
+    .site-nav a:hover, .site-nav a:focus {
+      color: var(--accent-primary) !important;
+    }
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -509,37 +516,42 @@
       });
 
       // Back to search link
-      document.getElementById('backToSearchLink').addEventListener('click', function() {
-        const searchContainer = document.querySelector('.advanced-search-container');
-        const breadcrumb = document.querySelector('.breadcrumb');
-        const resultsSection = document.getElementById('resultsSection');
-        
-        if (searchContainer) searchContainer.style.display = 'block';
-        if (breadcrumb) breadcrumb.style.display = 'inline-block';
-        resultsSection.style.display = 'none';
-        
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-
-      // Pagination buttons
-      document.getElementById('prevPageBtn').addEventListener('click', function() {
-        if (currentPage > 1) {
-          currentPage--;
-          displayResults(currentResults);
+      var backToSearchLink = document.getElementById('backToSearchLink');
+      if (backToSearchLink) {
+        backToSearchLink.addEventListener('click', function() {
+          const searchContainer = document.querySelector('.advanced-search-container');
+          const breadcrumb = document.querySelector('.breadcrumb');
+          const resultsSection = document.getElementById('resultsSection');
+          if (searchContainer) searchContainer.style.display = 'block';
+          if (breadcrumb) breadcrumb.style.display = 'inline-block';
+          if (resultsSection) resultsSection.style.display = 'none';
           window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      });
+        });
+      }
 
-      document.getElementById('nextPageBtn').addEventListener('click', function() {
-        const itemsPerPage = 35;
-        const totalPages = Math.ceil(currentResults.length / itemsPerPage);
-        if (currentPage < totalPages) {
-          currentPage++;
-          displayResults(currentResults);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      });
+      var prevPageBtn = document.getElementById('prevPageBtn');
+      if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', function() {
+          if (currentPage > 1) {
+            currentPage--;
+            displayResults(currentResults);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
+
+      var nextPageBtn = document.getElementById('nextPageBtn');
+      if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', function() {
+          const itemsPerPage = 35;
+          const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+          if (currentPage < totalPages) {
+            currentPage++;
+            displayResults(currentResults);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
 
       // Form validation
       document.getElementById('advancedSearchForm').addEventListener('submit', async function(e) {
