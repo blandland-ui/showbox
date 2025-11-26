@@ -1,3 +1,12 @@
+/* === HEADER COLOR FIX FOR ALL HEADERS === */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--accent-primary) !important;
+}
+h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover,
+h1:focus, h2:focus, h3:focus, h4:focus, h5:focus, h6:focus {
+  color: var(--text-primary) !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
 /* 
  * BlackSiteDB Styles
  * Optimized and organized CSS for the movie database site
@@ -243,7 +252,7 @@ img {
 }
 
 .site-nav a {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
   transition: color var(--transition-fast);
@@ -251,7 +260,7 @@ img {
 
 .site-nav a:hover,
 .site-nav a:focus {
-  color: var(--accent-primary) !important;
+  color: var(--accent-primary);
   text-decoration: underline;
 }
 
