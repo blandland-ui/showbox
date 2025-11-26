@@ -20,9 +20,11 @@
   }
   .logo-img {
     height: 38px !important;
-    margin-right: 8px;
+    margin-left: 5px;
+    margin-right: 5px;
     z-index: 4;
-    position: relative;
+    position: static;
+    /* Inherit parent's position, only add margin for spacing */
   }
   .logo-text {
     font-size: 1.1rem !important;
@@ -50,7 +52,9 @@
   }
   .logo-img {
     height: 28px !important;
+    margin-left: 5px;
     margin-right: 5px;
+    position: static;
   }
   .logo-text {
     font-size: 0.9rem !important;
