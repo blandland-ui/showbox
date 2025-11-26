@@ -3,8 +3,8 @@
   display: flex;
   align-items: center;
   position: absolute;
-  left: 20px;
-  top: 30px;
+  left: -435px;
+  top: -25px;
   transform: none;
   z-index: 10;
 }
