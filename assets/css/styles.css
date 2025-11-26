@@ -1,3 +1,114 @@
+/* --- LOGO/HEADER/NAV CLASSES FOR LAYOUT --- */
+.logo {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+.logo-img {
+  height: 100px;
+  margin-right: 20px;
+  opacity: 0.5;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);
+  z-index: 4;
+}
+.logo-text {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #A3FC13;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.8);
+}
+.logo-accent {
+  color: #fe531e;
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    height: auto;
+    padding: 0 8px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    position: relative;
+    display: flex !important;
+  }
+  .logo {
+    position: static;
+    left: 0;
+    top: 0;
+    transform: none;
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    z-index: 4;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .logo-img {
+    height: 38px !important;
+    margin-left: 8px;
+    margin-right: 8px;
+    z-index: 4;
+    position: static;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-size: 1.1rem !important;
+    font-weight: 700;
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .site-nav {
+    position: relative;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    margin-top: 12px;
+    z-index: 5;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+    background: rgba(0,0,0,0.15);
+    padding: 4px 0 0 0;
+    clear: both;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header {
+    height: auto;
+    padding: 0 4px;
+  }
+  .logo-img {
+    height: 28px !important;
+    margin-left: 5px;
+    margin-right: 5px;
+    position: static;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-size: 0.9rem !important;
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .site-nav {
+    gap: 4px;
+    font-size: 0.95em;
+    padding: 8px 0 0 0;
+    margin-top: 10px;
+    width: 100%;
+  }
+}
 /* --- Responsive header/logo/nav fixes for mobile --- */
 @media (max-width: 768px) {
   .site-header {
