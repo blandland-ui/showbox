@@ -17,8 +17,8 @@
 </head>
 <body>
   <!-- Header -->
-  <header class="site-header" style="height: 200px; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)); position: relative; display: flex; align-items: center; justify-content: center;">
-    <div class="logo">
+  <header class="site-header" style="height: 200px; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)); position: relative; display: flex;align-items: flex-start; justify-content: flex-start;">
+     <div class="logo">
     
       <img src="assets/site-logo.png" alt="Showbox Logo" class="logo-img">
       <span class="logo-text">Show<strong class="logo-accent">box</strong></span>
@@ -98,7 +98,7 @@
 
       <!-- Mobile Section Toggle -->
       <div class="section-toggle">
-        <div class="section-toggle-buttons">
+      <nav class="site-nav" role="navigation" aria-label="Main navigation">
           <button class="section-toggle-btn active" data-section="movies">Movies</button>
           <button class="section-toggle-btn" data-section="tv">TV Shows</button>
         </div>

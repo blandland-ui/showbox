@@ -1,15 +1,15 @@
 /* --- LOGO/HEADER/NAV CLASSES FOR LAYOUT --- */
 .logo {
-  display: flex;
-  align-items: center;
   position: absolute;
-  left: -425px;
-  top: -20px;
-  transform: none;
+  top: 40px;
+  left: 35px;
+  margin: 0;
   z-index: 10;
+  /* Remove flex and alignment so it's not centered by parent */
 }
 .logo-img {
-  height: 40px;
+  height: 32px !important;
+  width: auto !important;
   margin-right: 10px;
   opacity: 0.5;
   box-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
@@ -43,13 +43,8 @@
     gap: 0;
   }
   .logo {
-    position: static !important;
-    left: 0 !important;
-    top: 0 !important;
-    transform: none !important;
     display: flex !important;
-    align-items: center !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 15px !important;
     z-index: 4 !important;
     width: 100% !important;
     justify-content: flex-start !important;
