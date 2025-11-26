@@ -1,3 +1,8 @@
+/* Ensure logo image is one below site-nav */
+.logo-img {
+  z-index: 4;
+  position: relative;
+}
 /* === HEADER COLOR FIX FOR ALL HEADERS === */
 h1, h2, h3, h4, h5, h6 {
   color: var(--accent-primary) !important;
