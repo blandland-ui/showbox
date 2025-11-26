@@ -1,3 +1,66 @@
+/* --- Responsive header/logo/nav fixes for mobile --- */
+@media (max-width: 768px) {
+  .site-header {
+    height: 120px;
+    padding: 0 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    position: relative;
+  }
+  .site-header .logo {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none;
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    z-index: 4;
+  }
+  .logo-img {
+    height: 38px !important;
+    margin-right: 8px;
+    z-index: 4;
+    position: relative;
+  }
+  .logo-text {
+    font-size: 1.1rem !important;
+    font-weight: 700;
+  }
+  .site-nav {
+    position: relative;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    z-index: 5;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+    background: rgba(0,0,0,0.15);
+    padding: 4px 0 0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header {
+    height: 90px;
+    padding: 0 4px;
+  }
+  .logo-img {
+    height: 28px !important;
+    margin-right: 5px;
+  }
+  .logo-text {
+    font-size: 0.9rem !important;
+  }
+  .site-nav {
+    gap: 4px;
+    font-size: 0.95em;
+    padding: 2px 0 0 0;
+  }
+}
 /* === HEADER COLOR FIX FOR ALL HEADERS === */
 h1, h2, h3, h4, h5, h6 {
   color: var(--accent-primary) !important;
